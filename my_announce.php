@@ -105,7 +105,7 @@ $ann_interval = $tr_cfg['announce_interval'] + mt_rand(0, 600);
 $SQL = "SELECT ip, port
 		FROM tracker
 		WHERE info_hash = '$info_hash_sql'
-		ORDER BY ". $db->random_fn ."
+		ORDER BY RAND()
 		LIMIT ". (int) $tr_cfg['numwant'] .";";
 
 if ($res = $db->query($SQL) ){
