@@ -1,0 +1,39 @@
+AddDefaultCharset utf-8
+ServerSignature Off
+Options +Multiviews
+
+<IfModule mod_setenvif.c>
+    SetEnv TZ Europe/Kiev
+</IfModule>
+
+<Files ~ "\.(inc|conf|cfg|htaccess|htpasswd|ini|log|sh|twig)$">
+Deny from all
+</Files>
+
+
+<IfModule mod_rewrite.c>
+
+        RewriteEngine On
+        RewriteBase /
+
+        RewriteRule ^announce/?$ /my_announce.php [L]
+        RewriteRule ^announce.php/?$ /my_announce.php [L]
+
+        # use OpenTracker as anouncer (don't work!!!)
+        #RewriteCond  %{SERVER_PORT} !^10000$
+        #RewriteRule ^(.*) http://retracker.local:10000/$1
+        #RewriteRule ^(.*)$ http://retracker.local:10000/$1 [QSA,L]
+
+
+        #################################################################
+        # MVC model (URL mapping to index.php)
+        #################################################################
+
+        #RewriteCond %{REQUEST_FILENAME} -f [OR]
+        #RewriteCond %{REQUEST_FILENAME} -l [OR]
+        #RewriteCond %{REQUEST_FILENAME} -d
+        #RewriteRule ^.*$ - [NC,L]
+        #RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+</IfModule>
+
