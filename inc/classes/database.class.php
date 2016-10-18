@@ -8,7 +8,7 @@
  * Usage: $db = Database::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 06.03.2016. Last modified on 07.03.2016
+ * Created on 06.03.2016. Last modified on 18.10.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -35,19 +35,19 @@ class Database extends mysqli {
     }
 	
 	// Redeclare constructor
-    private function __construct($host=DB_HOST, $user=DB_USER, $password=DB_PSWD, $database=DB_NAME, $port=DB_PORT, $socket=NULL, $flags=0) {
+    public function __construct($host=DB_HOST, $user=DB_USER, $password=DB_PSWD, $database=DB_NAME, $port=DB_PORT, $socket=NULL, $flags=0) {
         parent::init();
 
         if (!parent::options(MYSQLI_INIT_COMMAND, 'SET AUTOCOMMIT = 1')) {
-            die('Установка MYSQLI_INIT_COMMAND завершилась провалом');
+            die('Set MYSQLI_INIT_COMMAND ended in failure!');
         }
 
         if (!parent::options(MYSQLI_OPT_CONNECT_TIMEOUT, 5)) {
-            die('Установка MYSQLI_OPT_CONNECT_TIMEOUT завершилась провалом');
+            die('Set MYSQLI_OPT_CONNECT_TIMEOUT ended in failure!');
         }
 
         if (!parent::real_connect($host, $user, $password, $database, $port, $socket, $flags)) {
-            //die('Ошибка подключения (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());
+            //die('Connection error (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());
         }
     }
 
