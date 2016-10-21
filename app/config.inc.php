@@ -3,7 +3,7 @@
  * ----------------------------------------------------------------------------
  *                              CONFIG
  * ----------------------------------------------------------------------------
- * Modified by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
+ * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
  * Created on 02.03.2016. Last modified on 21.10.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":

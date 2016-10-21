@@ -1,8 +1,8 @@
-Retreker - BitTorrent technology to optimize the exchange (bittorrent) traffic inside the local network. Retreker allows a direct connection by protocol bittorrent between subscribers of the same operator (or several operators have an agreement on the exchange of local traffic).
+Retreker - BitTorrent technology to optimize the exchange (bittorrent) traffic inside the local network. 
+Retreker allows a direct connection by protocol bittorrent between subscribers of the same operator (or several operators have an agreement on the exchange of local traffic).
 
-
- ----------------------------------------------------------------------------
- "THE BEER-WARE LICENSE":
- As long as you retain this notice you can do whatever you want with this stuff.
- If we meet some day, and you think this stuff is worth it, you can buy me a beer in return.
- ----------------------------------------------------------------------------
+USAGE:
+1) Create MySQL database (sql/schema.sql)
+2) Configure the connection to the database (app/config.inc.php).
+3) Configure a virtual host of web server to the directory "web".
+4) Create DNS name "retracker.local" (subscribers will be use URL: http://retracker.local/).
