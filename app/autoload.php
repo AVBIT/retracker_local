@@ -15,7 +15,7 @@
 
 // Include config
 if ($_SERVER['REMOTE_ADDR']=='::1' || $_SERVER['REMOTE_ADDR']=='127.0.0.1' ){
-    require_once 'config.inc.php'; // may be local config
+    require_once 'config.local.php'; // may be local config
 } else {
     require_once 'config.inc.php';
 }
