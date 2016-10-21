@@ -1,5 +1,5 @@
-Retreker - BitTorrent technology to optimize the exchange (bittorrent) traffic inside the local network. 
-Retreker allows a direct connection by protocol bittorrent between subscribers of the same operator (or several operators have an agreement on the exchange of local traffic).
+Retracker - BitTorrent technology to optimize the exchange (bittorrent) traffic inside the local network. 
+Retracker allows a direct connection by protocol bittorrent between subscribers of the same operator (or several operators have an agreement on the exchange of local traffic).
 
 USAGE:
 1) Create MySQL database (sql/schema.sql);
