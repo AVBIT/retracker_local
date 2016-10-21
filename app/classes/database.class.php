@@ -8,7 +8,7 @@
  * Usage: $db = Database::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 06.03.2016. Last modified on 18.10.2016
+ * Created on 06.03.2016. Last modified on 21.10.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -20,7 +20,6 @@
 class Database extends mysqli {
 
     private static $_instance; // The single instance
-
 
     /**
     * Get an instance of the Database
@@ -55,5 +54,3 @@ class Database extends mysqli {
     private function __clone() { }
 
 }
-
-?>

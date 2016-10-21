@@ -4,7 +4,7 @@
  *                              CONFIG
  * ----------------------------------------------------------------------------
  * Modified by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 02.03.2016. Last modified on 06.03.2016
+ * Created on 02.03.2016. Last modified on 21.10.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -14,21 +14,15 @@
 
 
 // DATABASE CONNECTION
-define("DB_HOST",    'localhost'); // Localhost via UNIX socket!!!
+define("DB_HOST",    'localhost'); // localhost - the fastest connection via UNIX socket!!!
 define("DB_USER",    'root');
 define("DB_PSWD",    '');
 define("DB_NAME",    'retracker');
 define("DB_PORT",    3306);
 
+
 //define("DS",        DIRECTORY_SEPARATOR);
 //define('SELF',      substr(dirname(__FILE__),0,-3));
-
-//define('INC',       dirname(__FILE__));
-//define('CLASSES',   dirname(__FILE__).DS."classes".DS);
-
-//define('CACHE', 	NULL);              // Disable cache !!!
-//define('CACHE', 	SELF."cache".DS);   // Enable cache !!!
-//define('TEMPLATES', SELF."tmpl".DS);
 
 
 // TRACKER CONFIG
@@ -45,5 +39,3 @@ $tr_cfg['ignore_reported_ip'] = true;       // Ignore IP reported by client
 $tr_cfg['verify_reported_ip'] = false;      // Verify IP reported by client against $_SERVER['HTTP_X_FORWARDED_FOR']
 $tr_cfg['allow_internal_ip']  = true;       // Allow internal IP (10.xx.. etc.)
 
-
-?>

@@ -4,7 +4,7 @@
  *                              ANNOUNCER
  * ----------------------------------------------------------------------------
  * Modified by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 02.03.2016. Last modified on 06.03.2016
+ * Created on 02.03.2016. Last modified on 21.10.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -12,8 +12,8 @@
  * ----------------------------------------------------------------------------
  */
 
-require_once ('inc/config.php');
-require_once('inc/classes/database.class.php');
+
+require_once '../app/autoload.php';
 
 define('TIMENOW', time());
 
@@ -194,5 +194,3 @@ function bencode ($var) {
 		trigger_error('bencode error: wrong data type', E_USER_ERROR);
 	}
 }
-
-
