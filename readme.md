@@ -6,4 +6,4 @@ USAGE:
 2) Copy 'app/config.sample.php' to 'app/config.inc.php'
 3) Configure the connection to the database (app/config.inc.php); 
 4) Configure a virtual host of web server to the directory "web"; 
-5) Create DNS name "retracker.local" (subscribers will be use URL: http://retracker.local/).
+5) Create DNS name "retracker.local" (subscribers will be use URL: http://retracker.local/announce).
