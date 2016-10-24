@@ -16,7 +16,7 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 # use retracker;
 # \. /path/to/sql/schema.sql
 ```
-2. Copy the files to the web server directory (Use Git or checkout with SVN using the web URL: https://github.com/AVBIT/retracker_local.git);
+1. Copy the files to the web server directory (Use Git or checkout with SVN using the web URL: https://github.com/AVBIT/retracker_local.git);
 1. Copy 'app/config.sample.php' to 'app/config.inc.php';
 1. Configure the connection to the database (app/config.inc.php); 
 1. Configure a virtual host of web server to the directory "web"; 
