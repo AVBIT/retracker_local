@@ -42,7 +42,7 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 >+ '|^' - Known bug
 >+ '|*' - For the end user does not matter.
 
-## -
+## 
 + |? statistics on the use (GUI)
 + |? implementation 'scrape' action
 + |! - **18.10.2016** - change application structure (renamed some directories and files, usage autoload classes, etc)
