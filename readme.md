@@ -16,15 +16,22 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 # use retracker;
 # \. /path/to/sql/schema.sql
 ```
-1. Copy the files to the web server directory (Use Git or checkout with SVN using the web URL: https://github.com/AVBIT/retracker_local.git);
-1. Copy 'app/config.sample.php' to 'app/config.inc.php';
-1. Configure the connection to the database (app/config.inc.php); 
-1. Configure a virtual host of web server to the directory "web"; 
-1. Create DNS name "retracker.local" (subscribers will be use URL: http://retracker.local/announce).
+2. Copy the files to the web server directory (Use Git or checkout with SVN using the web URL: https://github.com/AVBIT/retracker_local.git). Example for SVN:
+```
+# sudo svn co https://github.com/AVBIT/retracker_local.git/trunk /usr/www/retracker_local
+```
+3. Copy 'app/config.sample.php' to 'app/config.inc.php';
+4. Configure the connection to the database (app/config.inc.php); 
+5. Configure a virtual host of web server to the directory "web"; 
+6. Create DNS name "retracker.local" (subscribers will be use URL: http://retracker.local/announce).
 
 #### UPDATE:
-1. Update all files.
-1. When changes affecting the structure of the database, you may need to re-create the database tables. (sql/schema.sql);
+1. Update all files. Example for SVN:
+```
+# cd /usr/www/retracker_local
+# sudo svn up
+```
+2. When changes affecting the structure of the database, you may need to re-create the database tables. (sql/schema.sql);
 ```
 # mysql -uroot -p your_password
 # use retracker;
