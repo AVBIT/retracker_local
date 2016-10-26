@@ -86,7 +86,7 @@ $ip_sql = encode_ip($ip);
 // Start announcer
 // --------------------------------------------------------------------
 
-$info_hash_sql = rtrim($db->real_escape_string($info_hash), ' ');
+$info_hash_sql = $db->real_escape_string($info_hash);
 
 // Stopped event
 if ($event === 'stopped'){

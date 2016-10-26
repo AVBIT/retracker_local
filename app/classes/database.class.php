@@ -8,7 +8,7 @@
  * Usage: $db = Database::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 06.03.2016. Last modified on 21.10.2016
+ * Created on 06.03.2016. Last modified on 26.10.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -37,8 +37,12 @@ class Database extends mysqli {
     public function __construct($host=DB_HOST, $user=DB_USER, $password=DB_PSWD, $database=DB_NAME, $port=DB_PORT, $socket=NULL, $flags=0) {
         parent::init();
 
+        if (!parent::options(MYSQLI_INIT_COMMAND, 'SET CHARACTER SET \'cp1251\'')) {
+            die('Set MYSQLI_INIT_COMMAND \'SET CHARACTER SET \'cp1251\'\' ended in failure!');
+        }
+
         if (!parent::options(MYSQLI_INIT_COMMAND, 'SET AUTOCOMMIT = 1')) {
-            die('Set MYSQLI_INIT_COMMAND ended in failure!');
+            die('Set MYSQLI_INIT_COMMAND \'SET AUTOCOMMIT = 1\' ended in failure!');
         }
 
         if (!parent::options(MYSQLI_OPT_CONNECT_TIMEOUT, 5)) {
