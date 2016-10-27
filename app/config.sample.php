@@ -39,3 +39,5 @@ $tr_cfg['ignore_reported_ip'] = true;       // Ignore IP reported by client
 $tr_cfg['verify_reported_ip'] = false;      // Verify IP reported by client against $_SERVER['HTTP_X_FORWARDED_FOR']
 $tr_cfg['allow_internal_ip']  = true;       // Allow internal IP (10.xx.. etc.)
 
+$tr_cfg['compact_always'] = false;
+

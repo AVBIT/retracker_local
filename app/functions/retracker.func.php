@@ -4,7 +4,7 @@
  *                              CONFIG
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 24.10.2016. Last modified on 24.10.2016
+ * Created on 24.10.2016. Last modified on 26.10.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -22,9 +22,20 @@ function msg_die ($msg) {
     die($output);
 }
 
-function encode_ip ($ip) {
-    $d = explode('.', $ip);
-    return sprintf('%02x%02x%02x%02x', $d[0], $d[1], $d[2], $d[3]);
+function encode_ip($dotquad_ip) {
+    $ip_sep = explode('.', $dotquad_ip);
+    if (count($ip_sep) == 4)
+    {
+        return sprintf('%02x%02x%02x%02x', $ip_sep[0], $ip_sep[1], $ip_sep[2], $ip_sep[3]);
+    }
+
+    $ip_sep = explode(':', preg_replace('/(^:)|(:$)/', '', $dotquad_ip));
+    $res = '';
+    foreach ($ip_sep as $x)
+    {
+        $res .= sprintf('%0' . ($x == '' ? (9 - count($ip_sep)) * 4 : 4) . 's', $x);
+    }
+    return $res;
 }
 
 function decode_ip ($ip) {
@@ -32,7 +43,14 @@ function decode_ip ($ip) {
 }
 
 function verify_ip ($ip) {
-    return preg_match('#^(\d{1,3}\.){3}\d{1,3}$#', $ip);
+    //return preg_match('#^(\d{1,3}\.){3}\d{1,3}$#', $ip);
+    $iptype = false;
+    if (strpos($ip, ':') !== false) {
+        $iptype = 'ipv6';
+    } elseif (preg_match('#^(\d{1,3}\.){3}\d{1,3}$#', $ip) !== false) {
+        $iptype = 'ipv4';
+    }
+    return $iptype;
 }
 
 function str_compact ($str) {

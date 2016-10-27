@@ -41,6 +41,7 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 
 ##
 #### Release notes
+- **27.10.2016** - test new sql-schema, announce and scrape actions.
 - **26.10.2016** - bug fix (MySQL [Err] 1366 - Incorrect string value: '\xEF\xBF\xBD\xEF\xBF\xBD...' for column 'info_hash' at row 1).
 - **18.10.2016** - change application structure (renamed some directories and files, usage autoload classes, etc)
 - **02.03.2016** - application happy birthday :-) . 
