@@ -31,7 +31,7 @@ $tr_cfg = []; // array
 // Garbage collector (run this script in cron each 5 minutes with '?run_gc=1' e.g. http://retracker.local/announce.php?run_gc=1)
 $tr_cfg['run_gc_key'] = 'run_gc';
 
-$tr_cfg['announce_interval']  = 1800;       // sec, min = 60
+$tr_cfg['announce_interval']  = 300;        // sec, min = 60
 $tr_cfg['peer_expire_factor'] = 2.5;        // min = 2; Consider a peer dead if it has not announced in a number of seconds equal
                                             //to this many times the calculated announce interval at the time of its last announcement
 $tr_cfg['numwant']            = 50;         // number of peers being sent to client

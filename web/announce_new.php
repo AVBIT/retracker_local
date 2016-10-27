@@ -12,6 +12,7 @@
  * ----------------------------------------------------------------------------
  */
 
+header('Content-Type: text/plain; charset=UTF-8', true);
 
 require_once '../app/autoload.php';
 
@@ -180,31 +181,32 @@ if (!$output) {
 		    WHERE torrent_id = '$torrent_id'
 		    ORDER BY RAND()
 		    LIMIT $limit";
+
     if ($res = $db->query($SQL) ){
         // Pack peers if compact mode
         if ($compact_mode) {
             $peerset = $peerset6 = '';
             while ($row = $res->fetch_assoc()){
-                if (!empty($peer['ip'])) {
-                    $peerset .= pack('Nn', ip2long(decode_ip($peer['ip'])), $peer['port']);
+                if (!empty($row['ip'])) {
+                    $peerset .= pack('Nn', ip2long(decode_ip($row['ip'])), $row['port']);
                 }
-                if (!empty($peer['ipv6'])) {
-                    $peerset6 .= pack('H32n', $peer['ipv6'], $peer['port']);
+                if (!empty($row['ipv6'])) {
+                    $peerset6 .= pack('H32n', $row['ipv6'], $row['port']);
                 }
             }
         } else {
             $peerset = $peerset6 = array();
             while ($row = $res->fetch_assoc()){
-                if (!empty($peer['ip'])) {
+                if (!empty($row['ip'])) {
                     $peerset[] = array(
-                        'ip' => decode_ip($peer['ip']),
-                        'port' => intval($peer['port'])
+                        'ip' => decode_ip($row['ip']),
+                        'port' => intval($row['port'])
                     );
                 }
-                if (!empty($peer['ipv6'])) {
+                if (!empty($row['ipv6'])) {
                     $peerset6[] = array(
-                        'ip' => decode_ip($peer['ipv6']),
-                        'port' => intval($peer['port'])
+                        'ip' => decode_ip($row['ipv6']),
+                        'port' => intval($row['port'])
                     );
                 }
             }
@@ -251,6 +253,13 @@ if (!$output) {
     );
 
 }
+
+
+// TEST only!!!
+//$dump_file_name = '/tmp/retracker_announce_dump';
+//file_put_contents($dump_file_name, bencode($output). PHP_EOL . PHP_EOL , FILE_APPEND);
+//file_put_contents($dump_file_name, serialize($output) . PHP_EOL . bencode($output). PHP_EOL . PHP_EOL , FILE_APPEND);
+
 
 // Return data to client
 echo bencode($output);

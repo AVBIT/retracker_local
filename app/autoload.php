@@ -4,7 +4,7 @@
  *                          AUTOLOAD APPLICATION
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 21.10.2016. Last modified on 24.10.2016
+ * Created on 21.10.2016. Last modified on 27.10.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -14,7 +14,7 @@
 
 
 // Include config
-if ($_SERVER['REMOTE_ADDR']=='::1' || $_SERVER['REMOTE_ADDR']=='127.0.0.1' ){
+if (isset($_SERVER['REMOTE_ADDR']) && ($_SERVER['REMOTE_ADDR']=='::1' || $_SERVER['REMOTE_ADDR']=='127.0.0.1') ){
     require_once 'config.local.php'; // may be local config
 } else {
     require_once 'config.inc.php';

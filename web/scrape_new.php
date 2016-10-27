@@ -12,7 +12,7 @@
  * ----------------------------------------------------------------------------
  */
 
-// test only!!!
+header('Content-Type: text/plain; charset=UTF-8', true);
 
 require_once '../app/autoload.php';
 

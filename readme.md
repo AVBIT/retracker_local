@@ -24,6 +24,11 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 4. Configure the connection to the database (app/config.inc.php); 
 5. Configure a virtual host of web server to the directory "web"; 
 6. Create DNS name "retracker.local" (subscribers will be use URL: http://retracker.local/announce).
+7. Create cron job for run garbage collector. (add line in crontab file, example):
+```
+*/5    *       *       *       *       root    cd /usr/www/retracker_local/app/ && php cron_job.php > /dev/null 2>&1
+```
+
 
 #### UPDATE:
 1. Update all files. Example for SVN:

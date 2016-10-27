@@ -16,14 +16,10 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `tracker`;
 CREATE TABLE `tracker` (
-  `torrent_id` mediumint(9) NOT NULL,
-  `peer_hash` varchar(32) NOT NULL DEFAULT '',
   `info_hash` char(20) NOT NULL,
   `ip` char(8) NOT NULL,
-  `ipv6` char(32) NOT NULL,
   `port` smallint(5) unsigned NOT NULL DEFAULT '0',
   `update_time` int(11) NOT NULL DEFAULT '0',
-  `seeder` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`info_hash`,`ip`,`port`) USING BTREE
 ) ENGINE=MEMORY DEFAULT CHARSET=cp1251;
 
