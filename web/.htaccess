@@ -16,7 +16,8 @@ Deny from all
         RewriteEngine On
         RewriteBase /
 
-        #RewriteRule ^announce/?$ /announce.php [L]
+        #RewriteRule ^announce/?$ /announce_old.php [L]
+        #RewriteRule ^announce_old.php/?$ /announce_old.php [L]
 
         RewriteRule ^announce/?$ /announce_new.php [L]
         RewriteRule ^announce.php/?$ /announce_new.php [L]
