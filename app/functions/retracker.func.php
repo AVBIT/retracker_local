@@ -1,10 +1,10 @@
 <?php
 /**
  * ----------------------------------------------------------------------------
- *                              CONFIG
+ *                              RETRACKER FUNCTIONS
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 24.10.2016. Last modified on 26.10.2016
+ * Created on 24.10.2016. Last modified on 28.10.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.

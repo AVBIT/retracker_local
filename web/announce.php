@@ -117,9 +117,14 @@ if ($res = $db->query($SQL) ){
 
 $output = array(
 	'interval'     => (int) $ann_interval,
-	'min interval' => (int) $ann_interval,
+	//'min interval' => (int) $ann_interval,
 	'peers'        => $peers,
 );
+
+// TEST only!!!
+//$dump_file_name = '/tmp/retracker_announce_dump';
+//file_put_contents($dump_file_name, bencode($output). PHP_EOL . PHP_EOL , FILE_APPEND);
+//file_put_contents($dump_file_name, serialize($output) . PHP_EOL . bencode($output). PHP_EOL . PHP_EOL , FILE_APPEND);
 
 // Return data to client
 echo bencode($output);

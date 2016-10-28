@@ -4,7 +4,7 @@
  *                              ANNOUNCER
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 26.10.2016. Last modified on 27.10.2016
+ * Created on 26.10.2016. Last modified on 28.10.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -33,7 +33,7 @@ if (!empty($_GET[$tr_cfg['run_gc_key']])) {
 	$expire_factor     = max(floatval($tr_cfg['peer_expire_factor']), 2);
 	$peer_expire_time  = TIMENOW - floor($announce_interval * $expire_factor);
 
-	$db->query("DELETE FROM tracker_new WHERE update_time < $peer_expire_time;");
+	$db->query("DELETE FROM announce WHERE update_time < $peer_expire_time;");
 	die();
 }
 
@@ -105,7 +105,7 @@ $ip_sql = encode_ip($ip);
 // --------------------------------------------------------------------
 // Start announcer
 // --------------------------------------------------------------------
-$info_hash_hex = bin2hex($info_hash);
+$info_hash_hex = $db->real_escape_string(bin2hex($info_hash));
 $info_hash_sql = rtrim($db->real_escape_string($info_hash), ' ');
 
 // Peer unique id
@@ -116,13 +116,13 @@ $seeder = ($left == 0) ? 1 : 0;
 
 // Stopped event
 if ($event === 'stopped'){
-	$db->query("DELETE FROM tracker WHERE info_hash = '$info_hash_sql' AND ip = '$ip_sql' AND port = $port;");
+	$db->query("DELETE FROM announce WHERE info_hash = '$info_hash_sql' AND ip = '$ip_sql' AND port = $port;");
 	die();
 }
 
 $torrent_id = 0;
 $SQL = "SELECT torrent_id
-		FROM tracker_stats_new
+		FROM torrent
 		WHERE info_hash_hex = '$info_hash_hex'
 		LIMIT 1;";
 if ($res = $db->query($SQL) ) {
@@ -132,15 +132,13 @@ if ($res = $db->query($SQL) ) {
 }
 
 if (!$torrent_id) {
-    $SQL = "INSERT INTO tracker_stats_new
+    $SQL = "INSERT INTO torrent
 				(info_hash_hex, reg_time, update_time, `name`, `size`, `comment`)
 			VALUES
 				('$info_hash_hex', " . TIMENOW . ", " . TIMENOW . ", '$name', " . ($size > 0 ? $size : 0) . ", '$comment');
 			";
-    if ($res = $db->query($SQL) ) {
-        $torrent_id = $db->insert_id;
-        $res->close();
-    }
+    $db->query($SQL);
+    if($db->affected_rows > 0) $torrent_id = $db->insert_id;
 }
 
 $ipv6 = ($iptype == 'ipv6') ? encode_ip($ip) : ((verify_ip($ipv6) == 'ipv6') ? encode_ip($ipv6) : null);
@@ -165,7 +163,7 @@ $values[] = (int)$seeder;
 $values[] = TIMENOW;
 
 // Update peer info
-$db->query("REPLACE INTO tracker_new (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ")");
+$db->query("REPLACE INTO announce (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ")");
 
 
 // PREPARATION OUTPUT
@@ -176,10 +174,10 @@ if (!$output) {
     $limit = (int)(($numwant > $tr_cfg['numwant']) ? $tr_cfg['numwant'] : $numwant);
     $compact_mode = ($tr_cfg['compact_always'] || !empty($compact));
 
-    $SQL = "SELECT `ip`, `ipv6`, `port`
-		    FROM tracker_new
-		    WHERE torrent_id = '$torrent_id'
-		    ORDER BY RAND()
+    $SQL = "SELECT `ip`, `ipv6`, `port` 
+		    FROM announce 
+		    WHERE torrent_id = '$torrent_id' 
+		    ORDER BY RAND() 
 		    LIMIT $limit";
 
     if ($res = $db->query($SQL) ){
@@ -217,7 +215,7 @@ if (!$output) {
 
     $seeders = $peers = $leechers = 0;
     $SQL = "SELECT SUM(`seeder`) AS `seeders`, COUNT(*) AS `peers`
-			FROM tracker_new
+			FROM announce 
 			WHERE torrent_id = $torrent_id;
 			";
     if ($res = $db->query($SQL) ){
@@ -233,7 +231,7 @@ if (!$output) {
     $size > 0 ? $_sql[] = "`size` = IF(`size` = 0, " . ((int)$size) . ", `size`)" : FALSE;
     !empty($comment) ? $_sql[] = "`comment` = IF(`comment` = '', '" . $comment . "', `comment`)" : FALSE;
 
-    $SQL = "UPDATE tracker_stats_new SET
+    $SQL = "UPDATE torrent SET
 					seeders = $seeders,
 					leechers = $leechers,
 					update_time = " . TIMENOW . (sizeof($_sql) ? ", " . implode(", ", $_sql) : "") . "
@@ -245,7 +243,7 @@ if (!$output) {
     $ann_interval = $tr_cfg['announce_interval'] + mt_rand(0, 600);
     $output = array(
         'interval' => (int)$ann_interval,
-        'min interval' => (int)$ann_interval,  // tracker config: min interval (sec?)
+        //'min interval' => (int)$ann_interval,  // tracker config: min interval (sec?)
         'peers' => $peerset,
         'peers6' => $peerset6,
         'complete' => (int)$seeders,
@@ -256,7 +254,7 @@ if (!$output) {
 
 
 // TEST only!!!
-//$dump_file_name = '/tmp/retracker_announce_dump';
+//$dump_file_name = '/tmp/retracker_announce_dump_new';
 //file_put_contents($dump_file_name, bencode($output). PHP_EOL . PHP_EOL , FILE_APPEND);
 //file_put_contents($dump_file_name, serialize($output) . PHP_EOL . bencode($output). PHP_EOL . PHP_EOL , FILE_APPEND);
 
