@@ -22,9 +22,25 @@ $announce_interval = max(intval($tr_cfg['announce_interval']), 60);
 $expire_factor     = max(floatval($tr_cfg['peer_expire_factor']), 2);
 $peer_expire_time  = time() - floor($announce_interval * $expire_factor);
 
-$SQL = '';
-$SQL .= "DELETE FROM announce WHERE update_time < $peer_expire_time;";
-$SQL .= "DELETE FROM torrent WHERE torrent_id NOT IN (SELECT DISTINCT(torrent_id) FROM announce) AND ( (`name` IS NULL OR `name` = '') AND (`comment` IS NULL OR `comment` = '') );";
-$SQL .= "UPDATE torrent SET seeders=0, leechers=0 WHERE torrent_id NOT IN (SELECT DISTINCT(torrent_id) FROM announce);";
+//$SQL = '';
+//$SQL .= "DELETE FROM announce WHERE update_time < $peer_expire_time;";
+//$SQL .= "DELETE FROM torrent WHERE torrent_id NOT IN (SELECT DISTINCT(torrent_id) FROM announce) AND ( (`name` IS NULL OR `name` = '') AND (`comment` IS NULL OR `comment` = '') );";
+//$SQL .= "UPDATE torrent SET seeders=0, leechers=0 WHERE torrent_id NOT IN (SELECT DISTINCT(torrent_id) FROM announce);";
+// Database::getInstance()->query($SQL);
+// test
+//$dump_file_name = '/tmp/retracker_cron_dump';
+//file_put_contents($dump_file_name, $SQL. PHP_EOL . PHP_EOL , FILE_APPEND);
 
-Database::getInstance()->query($SQL);
+$db = Database::getInstance();
+$db->query("DELETE FROM announce WHERE update_time < $peer_expire_time;");
+if ($res = $db->query("SELECT DISTINCT(torrent_id) FROM announce;") ){
+    $ids = [];
+    while ($row = $res->fetch_assoc())$ids[] = (int)$row['torrent_id'];
+    $res->close();
+    if (!empty($ids)){
+        $ids = implode(',',$ids);
+        $db->query("DELETE FROM torrent WHERE torrent_id NOT IN ($ids) AND ( (`name` IS NULL OR `name` = '') AND (`comment` IS NULL OR `comment` = '') );");
+        $db->query("UPDATE torrent SET seeders=0, leechers=0 WHERE torrent_id NOT IN ($ids);");
+    }
+}
+exit;

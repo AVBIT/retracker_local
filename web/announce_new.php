@@ -57,6 +57,8 @@ $input_vars_str = array(
 $input_vars_num = array(
     'port',
     'numwant',
+    'uploaded',
+    'downloaded',
     'left',
     'compact',
     'size'
@@ -74,9 +76,10 @@ foreach ($input_vars_num as $var_name){
 
 // Verify required request params
 if (!isset($info_hash) || strlen($info_hash) != 20) msg_die('Invalid info_hash');
-if (!isset($port) || $port < 0 || $port > 0xFFFF) msg_die('Invalid port');
 if (!isset($peer_id) || strlen($peer_id) != 20) msg_die('Invalid peer_id');
 if (!isset($port) || $port < 0 || $port > 0xFFFF) msg_die('Invalid port');
+if (!isset($uploaded) || $uploaded < 0) msg_die('Invalid uploaded value');
+if (!isset($downloaded) || $downloaded < 0) msg_die('Invalid downloaded value');
 if (!isset($left) || $left < 0) msg_die('Invalid left value');
 
 // IP
@@ -116,7 +119,8 @@ $seeder = ($left == 0) ? 1 : 0;
 
 // Stopped event
 if ($event === 'stopped'){
-	$db->query("DELETE FROM announce WHERE info_hash = '$info_hash_sql' AND ip = '$ip_sql' AND port = $port;");
+	//$db->query("DELETE FROM announce WHERE info_hash = '$info_hash_sql' AND ip = '$ip_sql' AND port = $port;");
+    $db->query("DELETE FROM announce WHERE peer_hash='$peer_hash' AND info_hash = '$info_hash_hex';");
 	die();
 }
 
@@ -152,6 +156,10 @@ $columns[] = "`ip`";
 $columns[] = "`ipv6`";
 $columns[] = "`port`";
 $columns[] = "`seeder`";
+$columns[] = "`info_hash_hex`";
+$columns[] = "`uploaded`";
+$columns[] = "`downloaded`";
+$columns[] = "`left`";
 $columns[] = "`update_time`";
 
 $values[] = (int)$torrent_id;
@@ -160,6 +168,10 @@ $values[] = "'" . $db->real_escape_string($ipv4) . "'";
 $values[] = "'" . $db->real_escape_string($ipv6) . "'";
 $values[] = (int)$port;
 $values[] = (int)$seeder;
+$values[] = "'" . $db->real_escape_string($info_hash_hex) . "'";
+$values[] = (int)$uploaded;
+$values[] = (int)$downloaded;
+$values[] = (int)$left;
 $values[] = TIMENOW;
 
 // Update peer info

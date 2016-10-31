@@ -26,6 +26,7 @@ $torrent = array(
 
 $empty = 'd5:filesd0:d8:completei0e10:incompletei0eeee';
 
+
 if (strlen($info_hash) == 20) {
     $info_hash_hex = Database::getInstance()->real_escape_string(bin2hex($info_hash));
     $SQL = "SELECT seeders, leechers FROM torrent WHERE info_hash='$info_hash_hex' LIMIT 1;";
@@ -47,3 +48,33 @@ $output['files'][$info_hash] = array(
 echo bencode($output);
 
 exit;
+
+
+/*
+if (strlen($info_hash) == 20) {
+    $info_hash_hex = Database::getInstance()->real_escape_string(bin2hex($info_hash));
+    if ($res = Database::getInstance()->query("SELECT seeder FROM announce WHERE info_hash_hex='$info_hash_hex';") ) {
+        $seeders = $leechers = 0;
+        while ($row = $res->fetch_assoc()){
+            if ($row['seeder']=1) {
+                $seeders++;
+            } else {
+                $leechers++;
+            }
+        }
+        $res->close();
+
+        $output['files'][$info_hash] = array(
+            'complete' => $seeders,
+            'incomplete' => $leechers,
+        );
+
+        echo bencode($output);
+    }
+} else {
+    echo $empty;
+}
+
+
+exit;
+*/
