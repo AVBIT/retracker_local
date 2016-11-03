@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="uk" prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="generator" content="Viacheslav Avramenko (aka Lordz) avbitinfo(at)gmail.com"/>
+    <meta name="robots" content="index, follow"/>
+    <meta name="revisit" content="7"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="format-detection" content="address=no"/>
+
+    <meta name="author" content="AVBIT"/>
+    <meta name="copyright" content="AVBIT"/>
+    <meta name="description" content="Retracker - BitTorrent technology to optimize the exchange (bittorrent) traffic inside the local network."/>
+
+
+    {% block head %}
+        {% block head_meta %}
+            <meta name="keywords" content="retracker, tracker, torrent, bittorrent, magnet"/>
+        {% endblock %}
+
+        {% block head_meta_og %}
+            <meta property="og:locale" content="uk_UA" />
+            <meta property="og:site_name" content="RETRACKER.LOCAL"/>
+            <meta property="og:type" content="website" />
+            <meta property="og:title" content="RETRACKER.LOCAL" />
+            <meta property="og:url" content="http://retracker.local" />
+            <meta property="og:description" content="{{ page_title }}" />
+            <meta property="og:image" content="{{ base_path }}/img/logo.png" />
+            <meta property="og:image:type" content="image/png" />
+            <meta property="og:image:width" content="606" />
+            <meta property="og:image:height" content="552" />
+        {% endblock %}
+
+        {% block title %}<title>{{ page_title }} - RETRACKER.LOCAL</title>{% endblock %}
+
+        <link async rel="shortcut icon" type="image/png" href="{{ base_path }}/assets/img/favicon.png"/>
+        <link async rel="icon" type="image/png" href="{{ base_path }}/assets/img/favicon.png"/>
+        <link async rel="apple-touch-icon" type="image/png" href="{{ base_path }}/assets/img/apple-touch-icon.png">
+
+        <!-- Bootstrap core CSS -->
+        <link async href="{{ base_path }}/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link async href="{{ base_path }}/assets/css/style.css" rel="stylesheet">
+    <!--<link async href="{{ base_path }}/assets/css/min.css" rel="stylesheet" type="text/css"> -->
+
+        {% block head_script %}
+        {% endblock %}
+    {% endblock %}
+
+    <script>
+        var _SELF = this;
+        var base_path = '{{ base_path }}';
+    </script>
+
+</head>
+
+
+<body>
+<!--noindex-->
+<noindex>
+    <div style="display: none">
+        <a href="{{ base_path }}/hook_for_bots">WTF?</a>
+    </div>
+</noindex>
+<!--/noindex-->
+
+<div class="wrapper">
+
+    <!-- Site header -->
+    <div class="container-fluid" role="heading">
+        {% block header %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-default">
+                        <div class="container-fluid">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" style="margin-left: 10%; font-size: large" href="{{ base_path }}/">RETRACKER.LOCAL</a>
+                            </div>
+                            <div id="navbar" class="collapse navbar-collapse">
+                                <ul class="nav navbar-nav navbar-right">
+
+                                    <li {% if navAction == 'announces' %}class='active'{% endif %}><a href="{{ base_path }}/"><span class="glyphicon glyphicon-magnet"></span> {% trans "Announces" %} </a></li>
+                                    <li {% if navAction == 'history' %}class='active'{% endif %}><a href="{{ base_path }}/history"><span class="glyphicon glyphicon-cloud-download"></span> {% trans "History" %} </a></li>
+
+                                    <li {% if navAction == 'faq' %}class='active'{% endif %}><a href="{{ base_path }}/faq"><span class="glyphicon glyphicon-question-sign"></span> {% trans "FAQ" %} </a></li>
+
+                                    {% if account.is_adm == true %}
+                                        <!-- Registered admin submenu -->
+                                        <li {% if navAction == 'stats' %} class='active' {% endif %} ><a href="{{ base_path }}/stats"><span class="glyphicon glyphicon-stats"></span> {% trans "Statistic" %} </a></li>
+                                    {% endif %}
+                                    {% if account.is_auth == true %}
+                                        <!-- Registered user submenu -->
+                                        <li {% if navAction == 'profile' %} class='active' {% endif %} ><a href="{{ base_path }}/profile"><span class="glyphicon glyphicon-cog"></span> {% trans "Profile" %}, [ {{ account.local_ip }} ] </a></li>
+                                    {% endif %}
+                                </ul>
+                            </div><!--/.nav-collapse -->
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+
+    <!-- Site content -->
+    <div class="container-fluid">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Site footer -->
+    <div class="container-fluid" role="contentinfo">
+        {% block footer %}
+            <footer id="footer" class="footer raised">
+
+            </footer>
+        {% endblock %}
+    </div>
+
+</div>
+
+
+{% block footer_script %}
+    {#
+    <!-- jQuery
+    <script src="{{ base_path }}/assets/vendor/jQuery/jquery-2.1.4.min.js"></script>-->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster-->
+    <!--<script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="{{ base_path }}/assets/vendor/bootstrap/js/bootstrap.min.js"></script>-->
+
+    <!-- Custom JS
+    <script async src="{{ base_path }}/assets/js/ajax.js"></script>
+    <script async src="{{ base_path }}/assets/js/modalwindow.js"></script>
+    <script async src="{{ base_path }}/assets/js/processing.js"></script>-->
+    #}
+    <!-- Custom JS
+    <script async src="{{ base_path }}/assets/js/min.js"></script>-->
+
+{% block google_analytics %}
+{% endblock %}
+
+{% endblock %}
+
+
+</body>
+</html>

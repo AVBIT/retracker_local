@@ -4,7 +4,7 @@
  *                              ANNOUNCER
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 26.10.2016. Last modified on 28.10.2016
+ * Created on 26.10.2016. Last modified on 02.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -252,7 +252,7 @@ if (!$output) {
     $db->query($SQL);
 
     // Generate output
-    $ann_interval = $tr_cfg['announce_interval'] + mt_rand(0, 600);
+    $ann_interval = $tr_cfg['announce_interval'] + mt_rand(0, 60);
     $output = array(
         'interval' => (int)$ann_interval,
         //'min interval' => (int)$ann_interval,  // tracker config: min interval (sec?)
@@ -269,6 +269,9 @@ if (!$output) {
 //$dump_file_name = '/tmp/retracker_announce_dump_new';
 //file_put_contents($dump_file_name, bencode($output). PHP_EOL . PHP_EOL , FILE_APPEND);
 //file_put_contents($dump_file_name, serialize($output) . PHP_EOL . bencode($output). PHP_EOL . PHP_EOL , FILE_APPEND);
+
+//$dump_file_name = '/tmp/retracker_announce_dump_user_agent';
+//file_put_contents($dump_file_name, $_SERVER['HTTP_USER_AGENT']. " - " . $_SERVER['QUERY_STRING']. PHP_EOL . PHP_EOL , FILE_APPEND);
 
 
 // Return data to client

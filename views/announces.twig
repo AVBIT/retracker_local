@@ -1,0 +1,67 @@
+{% extends "base.twig" %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-sm-10 col-lg-offset-1">
+
+            {% if announces %}
+                <!-- BEGIN ANNOUNCES LIST -->
+                <div>
+                    <table class="info">
+                        <thead>
+                        <tr>
+                            <th class="title" colspan="8"> -= Активні мережеві bittorrent анонси =- </th>
+                        </tr>
+                        <tr>
+                            <th> seeders </th>
+                            <th> leechers </th>
+                            <th> name / info_hash_hex </th>
+                            <th> size </th>
+                            <th> comment </th>
+                            <th> reg_time </th>
+                            <th> update_time </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- BEGIN announces_body -->
+                        {% set announces_count = 0 %}
+                        {% for announce in announces %}
+                            {% set announces_count = loop.length %}
+                            <tr class="selected">
+                                <td>{{ announce.seeders }}</td>
+                                <td>{{ announce.leechers }}</td>
+                                <td>
+                                    <div>
+                                        <a href="magnet:?xt=urn:btih:{{ announce.info_hash_hex }}&tr=http://retracker.local/announce">{{ announce.name }}</a>
+                                        <div style="text-align: center; font-size: smaller; color: lightgray; vertical-align:bottom;">InfoHashHex: {{ announce.info_hash_hex }}</div>
+                                    </div>
+                                </td>
+                                <td>{{ announce.size }}</td>
+                                <td><a href="{{ announce.comment }}">{{ announce.comment }}</a></td>
+                                <td>{{ announce.reg_time|date('d.m.Y H:m:s') }}</td>
+                                <td>{{ announce.update_time|date('d.m.Y H:m:s') }}</td>
+                            </tr>
+                        {% endfor %}
+                        <!-- END announces_body -->
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th colspan="7"> Загалом: {{ announces_count }} </th>
+                        </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+                <!-- END ANNOUNCES LIST -->
+            {% endif %}
+
+        </div>
+    </div>
+
+    <br><br><br><br>
+
+
+
+{% endblock %}

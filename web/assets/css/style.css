@@ -1,0 +1,64 @@
+@charset "utf-8";
+/* --------------------------------------------------------------------- */
+/* -------                     CSS Document       	             ------- */
+/* --------------------------------------------------------------------- */
+/* ------- Author V.Avramenko aka Lordz (avbitinfo@gmail.com)    ------- */
+/* ------- Created on 02.11.2016. Modified on 02.11.2016         ------- */
+/* --------------------------------------------------------------------- */
+
+@font-face { font-family: PixelCyr-Normal; src: url('font/pixel_cyr_normal.ttf'); }
+
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.warning {
+    font-size: 1em;
+    color: #D3054A
+}
+
+table.info {
+    border-collapse:collapse;
+    width: 100%;
+}
+table.info th, td {
+    padding: 5px;
+    text-align: center;
+
+}
+table.info tr:nth-child(even){background-color: #f2f2f2}
+table.info thead {
+    background-color: darkkhaki;
+    text-align: center;
+    font-family: Pixel Cyr;
+}
+table.info thead .title {
+    font-size: 1.5em;
+    color: white;
+    text-align: center;
+ }
+
+table.info tbody {
+    background-color: lightyellow;
+}
+
+table.info thead th, tfoot tr {
+    text-align: center;
+}
+
+table.info tfoot tr {
+    text-align: center;
+}
+
+table.info tbody tr.selected:hover {
+    background-color: khaki;
+    color: darkgreen;
+}
+
+table.info tfoot {
+    background-color: darkkhaki;
+}

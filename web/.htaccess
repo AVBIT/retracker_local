@@ -1,6 +1,9 @@
 AddDefaultCharset utf-8
+DirectoryIndex index.php
+#DirectoryIndex under_construction.php
 ServerSignature Off
-Options +Multiviews
+Options -Indexes
+#Options +Multiviews
 
 <IfModule mod_setenvif.c>
     SetEnv TZ Europe/Kiev
@@ -28,12 +31,110 @@ Deny from all
         #################################################################
         # MVC model (URL mapping to index.php)
         #################################################################
-
-        #RewriteCond %{REQUEST_FILENAME} -f [OR]
-        #RewriteCond %{REQUEST_FILENAME} -l [OR]
-        #RewriteCond %{REQUEST_FILENAME} -d
-        #RewriteRule ^.*$ - [NC,L]
-        #RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
-
+        RewriteCond %{REQUEST_FILENAME} -f [OR]
+        RewriteCond %{REQUEST_FILENAME} -l [OR]
+        RewriteCond %{REQUEST_FILENAME} -d
+        RewriteRule ^.*$ - [NC,L]
+        RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+        #RewriteRule ^(.*)$ under_construction.php [QSA,L]
 </IfModule>
+
+
+#################################################################
+# Reducing MIME type security risks
+#################################################################
+# Prevent some browsers from MIME-sniffing the response.
+#
+# This reduces exposure to drive-by download attacks and cross-origin
+# data leaks, and should be left uncommented, especially if the server
+# is serving user-uploaded content or content that could potentially be
+# treated as executable by the browser.
+#
+# http://www.slideshare.net/hasegawayosuke/owasp-hasegawa
+# http://blogs.msdn.com/b/ie/archive/2008/07/02/ie8-security-part-v-comprehensive-protection.aspx
+# https://msdn.microsoft.com/en-us/library/ie/gg622941.aspx
+# https://mimesniff.spec.whatwg.org/
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
+
+#################################################################
+# Enable Gzip compression (Transfer speed improvement: 8.4 X !!!)
+#################################################################
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE application/font*
+  <IfModule mod_setenvif.c>
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+  </IfModule>
+</IfModule>
+
+
+#################################################################
+# Set browser cache (day=86400; week=604800; month=2592000)
+#################################################################
+<ifModule mod_headers.c>
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "max-age=43200"
+    </FilesMatch>
+    <FilesMatch "\.(js|css|txt)$">
+        Header set Cache-Control "max-age=604800, proxy-revalidate"
+    </FilesMatch>
+    <FilesMatch "\.(flv|swf|ico|gif|jpg|jpeg|png)$">
+        Header set Cache-Control "max-age=2592000"
+    </FilesMatch>
+    <FilesMatch "\.(eot|svg|ttf|woff|woff2)$">
+        Header set Cache-Control "max-age=2592000"
+    </FilesMatch>
+    #<FilesMatch "\.(pl|php|cgi|spl|scgi|fcgi)$">
+    #    Header unset Cache-Control
+    #</FilesMatch>
+</IfModule>
+
+
+#################################################################
+# Set browser cache expiration
+#################################################################
+<ifModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 86400 seconds"
+
+    ExpiresByType image/x-icon "access plus 604800 seconds"
+    ExpiresByType image/jpeg "access plus 604800 seconds"
+    ExpiresByType image/png "access plus 604800 seconds"
+    ExpiresByType image/gif "access plus 604800 seconds"
+    ExpiresByType application/x-shockwave-flash "access plus 604800 seconds"
+
+    ExpiresByType text/css "access plus 86400 seconds"
+    ExpiresByType text/javascript "access plus 86400 seconds"
+    ExpiresByType application/javascript "access plus 86400 seconds"
+    ExpiresByType application/x-javascript "access plus 86400 seconds"
+
+    ExpiresByType text/html "access plus 43200 seconds"
+
+    ExpiresByType application/xhtml+xml "access plus 600 seconds"
+
+    # Embedded OpenType (EOT)
+    ExpiresByType application/vnd.ms-fontobject         "access plus 1 month"
+    ExpiresByType font/eot                              "access plus 1 month"
+    # OpenType
+    ExpiresByType font/opentype                         "access plus 1 month"
+    # TrueType
+    ExpiresByType application/x-font-ttf                "access plus 1 month"
+    # Web Open Font Format (WOFF) 1.0
+    ExpiresByType application/font-woff                 "access plus 1 month"
+    ExpiresByType application/x-font-woff               "access plus 1 month"
+    ExpiresByType font/woff                             "access plus 1 month"
+    # Web Open Font Format (WOFF) 2.0
+    ExpiresByType application/font-woff2                "access plus 1 month"
+
+</ifModule>
+
 
