@@ -26,10 +26,10 @@ define('SELF',      substr(dirname(__FILE__),0,-3));
 
 define('DIR_VAR', 	SELF."var".DS);
 define('DIR_CACHE', DIR_VAR."cache".DS);
-define('DIR_SESSION', DIR_VAR."session".DS);
+//define('DIR_SESSION', DIR_VAR."session".DS);
 
 // CLASS CACHE
-//define('CACHE', SELF . "cache" . DS);   // if (defined('CACHE')) # Enable cache !!!
+define('CACHE', DIR_CACHE);   // if (defined('CACHE')) # Enable cache !!!
 //define('CACHETYPE', "file");            // CACHETYPE value: file/redis ; default: file
 
 // TWIG SETTINGS

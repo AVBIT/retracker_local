@@ -8,7 +8,7 @@
  * Usage: $announce = Announce::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.03.2016. Last modified on 02.11.2016
+ * Created on 27.03.2016. Last modified on 03.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -88,26 +88,34 @@ class Announce {
         return $result;
     }
 
-    public function getHumanReadable($is_with_info = false){
+    public function getHumanReadable(){
         $result = [];
-        $SQL = "SELECT
-torrent.info_hash_hex,
-torrent.seeders,
-torrent.leechers,
-torrent.reg_time,
-torrent.update_time,
-torrent.`name`,
-torrent.size,
-torrent.`comment`
-FROM
-announce
-LEFT JOIN torrent ON torrent.torrent_id = announce.torrent_id
-WHERE NOT ISNULL(`name`) AND `name` != ''
-GROUP BY info_hash_hex
-ORDER by update_time";
 
-        //echo $SQL;
-        //$this->db->query("SET CHARACTER SET 'utf-8';");
+        // Read from cache
+        if (defined('CACHE')){
+            $result=@Cache::getInstance()->get( __FUNCTION__ . __CLASS__ );
+            //var_dump($result);
+            if (!empty($result)) return $result;
+        }
+
+        $SQL = "SELECT
+                  torrent.info_hash_hex,
+                  torrent.seeders,
+                  torrent.leechers,
+                  torrent.reg_time,
+                  torrent.update_time,
+                  torrent.`name`,
+                  torrent.size,
+                  torrent.`comment`
+                FROM
+                  announce
+                LEFT JOIN torrent ON torrent.torrent_id = announce.torrent_id
+                WHERE NOT ISNULL(`name`) AND `name` != ''
+                GROUP BY info_hash_hex
+                ORDER by update_time;
+                ";
+
+        //echo $SQL; // test only
         if ($res = $this->db->query($SQL) ){
             while ($row = $res->fetch_assoc()){
                 if (isset($row['name'])) $row['name'] = mb_convert_encoding($row['name'], "UTF-8", "CP1251");
@@ -115,6 +123,10 @@ ORDER by update_time";
             }
             $res->close();
         }
+
+        // Save to cache
+        if (defined('CACHE')) @Cache::getInstance()->set( __FUNCTION__ . __CLASS__ , $result, 1200);
+
         return $result;
     }
 
@@ -126,5 +138,44 @@ ORDER by update_time";
     }
     private function actionStopped ($arr){
 
+    }
+
+    public function getScrapeByInfoHash ($info_hash = null){
+        $result = 'd5:filesd0:d8:completei0e10:incompletei0eeee'; // empty result
+        if (empty($info_hash) || strlen($info_hash) != 20) return $result;
+        $info_hash = mb_convert_encoding($info_hash, "UTF-8", "auto");
+        $info_hash_hex = bin2hex($info_hash);
+        //echo $info_hash_hex;
+
+        // Read from cache
+        if (defined('CACHE')){
+            $result=@Cache::getInstance()->get('scrape_' . $info_hash_hex); // __FUNCTION__ . bin2hex($info_hash)
+            if (!empty($result)) return $result;
+        }
+
+        $info_hash_hex = Database::getInstance()->real_escape_string($info_hash_hex);
+
+        $seeders = $leechers = 0;
+        if ($res = Database::getInstance()->query("SELECT seeder FROM announce WHERE info_hash_hex='$info_hash_hex';") ) {
+            while ($row = $res->fetch_assoc()){
+                if ($row['seeder']=1) {
+                    $seeders++;
+                } else {
+                    $leechers++;
+                }
+            }
+            $res->close();
+        }
+        $output['files'][$info_hash] = array(
+                                            'complete' => $seeders,
+                                            'incomplete' => $leechers,
+                                            );
+
+        $result = bencode($output);
+
+        // Save to cache
+        if (defined('CACHE')) @Cache::getInstance()->set('scrape_' . $info_hash_hex, $result, 120);
+
+        return $result;
     }
 }
