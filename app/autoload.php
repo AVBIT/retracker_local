@@ -29,6 +29,7 @@ spl_autoload_register(function ($class) {
 
 // Register my functions
 require_once __DIR__ . '/functions/retracker.func.php';
+require_once __DIR__ . '/functions/twigfilters.func.php';
 
 
 // Register other (vendor) classes

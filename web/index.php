@@ -37,9 +37,9 @@ define("BASE_PATH", $base_path);
 
 
 // Set language to Ukrainian
-$language = "ua_UA.UTF-8";  // locality should be determined here
-//putenv("LANGUAGE=" . $language);
-//setlocale(LC_ALL, $language);
+//$language = "uk_UA.UTF-8";  // locality should be determined here
+//$language = "uk";  // locality should be determined here
+$language = LangDetect::getInstance()->getBestMatch();
 if (defined('LC_MESSAGES')) setlocale(LC_MESSAGES, $language); // Linux
 putenv("LC_ALL={$language}"); // Windows
 
@@ -61,6 +61,7 @@ if (false === function_exists('gettext')) {
 $loader = new Twig_Loader_Filesystem(TEMPLATES);
 $twig = new Twig_Environment($loader,array('cache' => defined('TWIG_CACHE')?TWIG_CACHE:NULL,));
 $twig->addExtension(new Twig_Extensions_Extension_I18n());
+$twig->addFilter($filter_sizeHR);
 
 if ($action == 'announces') {
 
