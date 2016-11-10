@@ -3,10 +3,11 @@
 /* -------                     CSS Document       	             ------- */
 /* --------------------------------------------------------------------- */
 /* ------- Author V.Avramenko aka Lordz (avbitinfo@gmail.com)    ------- */
-/* ------- Created on 02.11.2016. Modified on 02.11.2016         ------- */
+/* ------- Created on 02.11.2016. Modified on 11.11.2016         ------- */
 /* --------------------------------------------------------------------- */
 
-@font-face { font-family: PixelCyr-Normal; src: url('font/pixel_cyr_normal.ttf'); }
+
+@font-face { font-family: PixelCyrNormal; src: url('../font/pixel_cyr_normal.ttf') format('truetype'); }
 
 
 html, body {
@@ -34,7 +35,7 @@ table.info tr:nth-child(even){background-color: #f2f2f2}
 table.info thead {
     background-color: darkkhaki;
     text-align: center;
-    font-family: Pixel Cyr;
+    font-family: PixelCyrNormal;
 }
 table.info thead .title {
     font-size: 1.5em;
