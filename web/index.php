@@ -4,7 +4,7 @@
  *                       APPLICATION CONTROLLER
  * --------------------------------------------------------------------
  * Author V.Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 28.10.2016. Last modified on 01.11.2016
+ * Created on 28.10.2016. Last modified on 10.11.2016
  * --------------------------------------------------------------------
  */
 
@@ -65,7 +65,7 @@ $twig->addFilter($filter_sizeHR);
 
 if ($action == 'announces') {
 
-    //var_dump(Announce::getInstance()->getAll());
+    //var_dump(Announce::getInstance()->getHumanReadable());
 
     echo $twig->render('announces.twig', array(
             'base_path' => $base_path,
@@ -90,9 +90,27 @@ if ($action == 'announces') {
     );
     exit;
 
+} elseif ($action == 'search' && Account::getInstance()->isAuth()) {
+
+    $search_query = isset($_POST['search_query']) ? $_POST['search_query'] : '';
+    //var_dump(BitTorrent::getInstance()->Search($search_query));
+
+    echo $twig->render('search.twig', array(
+            'base_path' => $base_path,
+            'page_title' => 'Search',
+            'navAction' => $action,
+            'account' => Account::getInstance()->get(),
+            'current_date' => date('d.m.Y H:i',time()),
+            'search_query' => $search_query,
+            'search_result' => BitTorrent::getInstance()->Search($search_query),
+        )
+    );
+
+    exit;
+
 } elseif ($action == 'faq' && Account::getInstance()->isAuth()) {
 
-    echo $twig->render('empty_page.twig', array(
+    echo $twig->render('faq.twig', array(
             'base_path' => $base_path,
             'page_title' => 'FAQ',
             'navAction' => $action,

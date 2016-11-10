@@ -8,7 +8,7 @@
  * Usage: $announce = Announce::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.03.2016. Last modified on 04.11.2016
+ * Created on 27.03.2016. Last modified on 10.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -98,6 +98,7 @@ class Announce {
             if (!empty($result)) return $result;
         }
 
+        /*
         $SQL = "SELECT
                   torrent.info_hash_hex,
                   torrent.seeders,
@@ -110,10 +111,24 @@ class Announce {
                 FROM
                   announce
                 LEFT JOIN torrent ON torrent.torrent_id = announce.torrent_id
-                WHERE NOT ISNULL(`name`) AND `name` != ''
+                WHERE NOT ISNULL(announce.`name`) AND announce.`name` != ''
                 GROUP BY info_hash_hex
                 ORDER by update_time;
                 ";
+        */
+        $SQL = "SELECT
+                  info_hash_hex,
+                  seeders,
+                  leechers,
+                  `name`,
+                  `size`,
+                  `comment`,
+				  update_time
+                FROM
+                  bittorrent
+                WHERE seeders!=0 OR leechers!=0
+                ORDER BY update_time DESC;
+        ";
 
         //echo $SQL; // test only
         if ($res = $this->db->query($SQL) ){
@@ -130,7 +145,7 @@ class Announce {
         }
 
         // Save to cache
-        if (defined('CACHE')) @Cache::getInstance()->set( __FUNCTION__ . __CLASS__ , $result, 1200);
+        if (defined('CACHE')) @Cache::getInstance()->set( __FUNCTION__ . __CLASS__ , $result, 10);
 
         return $result;
     }
@@ -148,20 +163,19 @@ class Announce {
     public function getScrapeByInfoHash ($info_hash = null){
         $result = 'd5:filesd0:d8:completei0e10:incompletei0eeee'; // empty result
         if (empty($info_hash) || strlen($info_hash) != 20) return $result;
-        $info_hash = mb_convert_encoding($info_hash, "UTF-8", "auto");
+        $info_hash = @mb_convert_encoding($info_hash, "UTF-8", "auto");
         $info_hash_hex = bin2hex($info_hash);
+        $info_hash_hex_sql = Database::getInstance()->real_escape_string($info_hash_hex);
         //echo $info_hash_hex;
 
         // Read from cache
         if (defined('CACHE')){
-            $result=@Cache::getInstance()->get('scrape_' . $info_hash_hex); // __FUNCTION__ . bin2hex($info_hash)
+            $result=@Cache::getInstance()->get('scrape_' . $info_hash_hex);
             if (!empty($result)) return $result;
         }
 
-        $info_hash_hex = Database::getInstance()->real_escape_string($info_hash_hex);
-
         $seeders = $leechers = 0;
-        if ($res = Database::getInstance()->query("SELECT seeder FROM announce WHERE info_hash_hex='$info_hash_hex';") ) {
+        if ($res = Database::getInstance()->query("SELECT seeder FROM announce WHERE info_hash_hex='$info_hash_hex_sql';") ) {
             while ($row = $res->fetch_assoc()){
                 if ($row['seeder']=1) {
                     $seeders++;

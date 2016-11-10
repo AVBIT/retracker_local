@@ -7,7 +7,7 @@
  * LangDetect class using Singleton pattern.
  * Only one instance of the class will be made, this requires less memory.
  * Usage: $language = LangDetect::getInstance()->getBestMatch();
- *  * Usage: $language = LangDetect::getInstance()->getBestMatch('en', $langs);
+ * Usage: $language = LangDetect::getInstance()->getBestMatch('en', $langs);
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
  * Created on 09.11.2016. Last modified on 09.11.2016

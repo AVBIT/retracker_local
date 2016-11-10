@@ -9,42 +9,43 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.11\n"
-"X-Poedit-Basepath: .\n"
+"X-Poedit-Basepath: ../../../views\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Last-Translator: AVBIT <avbitinfo@gmail.com>\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"Language: uk_UA\n"
+"Language: ru\n"
+"X-Poedit-SearchPath-0: .\n"
 
 #, php-format
 msgid "Announces"
-msgstr "Анонси"
+msgstr "Анонсы"
 
 msgid "History"
-msgstr "Історія"
+msgstr "История"
 
 msgid "My announces"
-msgstr "Мої роздачі"
+msgstr "Мои анонсы"
 
 msgid "FAQ"
-msgstr "Допомога (FAQ)"
+msgstr "Помощь (FAQ)"
 
 msgid "Statistic"
 msgstr "Статистика"
 
 msgid "Profile"
-msgstr "Профіль"
+msgstr "Пофиль"
 
 msgid "Sorry, page under construction!"
-msgstr "Вибачайте, сторінка в розробці!"
+msgstr "Извините, страница на реконструкции"
 
 msgid "Active bittorrent network announcements"
-msgstr "Активні мережеві bittorrent анонси"
+msgstr "Активные сетевые bittorrent анонсы"
 
 msgid "History of announcements"
-msgstr "Історія анонсів"
+msgstr "История анонсов"
 
 msgid "Search"
-msgstr "Пошук"
+msgstr "Поиск"
 
 msgid "Search results"
-msgstr "Результати пошуку"
+msgstr "Результаты поиска"

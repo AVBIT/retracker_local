@@ -22,8 +22,8 @@ Deny from all
         #RewriteRule ^announce/?$ /announce_old.php [L]
         #RewriteRule ^announce_old.php/?$ /announce_old.php [L]
 
-        RewriteRule ^announce/?$ /announce_new.php [L]
-        RewriteRule ^announce.php/?$ /announce_new.php [L]
+        RewriteRule ^announce/?$ /announce_ng.php [L]
+        RewriteRule ^announce.php/?$ /announce_ng.php [L]
         RewriteRule ^scrape/?$ /scrape_new.php [L]
         RewriteRule ^scrape.php/?$ /scrape_new.php [L]
 

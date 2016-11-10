@@ -4,7 +4,7 @@
  *                              CONFIG
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 02.03.2016. Last modified on 09.11.2016
+ * Created on 02.03.2016. Last modified on 10.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -39,7 +39,7 @@ define('TEMPLATES', SELF . "views" . DS);
 define('LANGUAGE', serialize(array(
     'en' => 'en',
     'uk' => array('ru', 'uk'),
-    //'ru' => array('ru', 'be', 'ky', 'ab', 'mo', 'et', 'lv'),
+    'ru' => array('ru', 'be', 'ky', 'ab', 'mo', 'et', 'lv'),
 )));
 
 
@@ -53,9 +53,9 @@ $tr_cfg['announce_interval']  = 120;        // sec, min = 60
 $tr_cfg['peer_expire_factor'] = 2.5;        // min = 2; Consider a peer dead if it has not announced in a number of seconds equal
                                             //to this many times the calculated announce interval at the time of its last announcement
 $tr_cfg['numwant']            = 50;         // number of peers being sent to client
-//$tr_cfg['ignore_reported_ip'] = true;       // Ignore IP reported by client
-//$tr_cfg['verify_reported_ip'] = false;      // Verify IP reported by client against $_SERVER['HTTP_X_FORWARDED_FOR']
-//$tr_cfg['allow_internal_ip']  = true;       // Allow internal IP (10.xx.. etc.)
+$tr_cfg['ignore_reported_ip'] = true;       // Ignore IP reported by client
+$tr_cfg['verify_reported_ip'] = false;      // Verify IP reported by client against $_SERVER['HTTP_X_FORWARDED_FOR']
+$tr_cfg['allow_internal_ip']  = true;       // Allow internal IP (10.xx.. etc.)
 
 $tr_cfg['compact_always'] = true;
 

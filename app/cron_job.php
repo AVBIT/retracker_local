@@ -4,7 +4,7 @@
  *                              CRON JOB
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.10.2016. Last modified on 28.10.2016
+ * Created on 27.10.2016. Last modified on 10.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -20,7 +20,8 @@ require_once 'autoload.php';
 
 $announce_interval = max(intval($tr_cfg['announce_interval']), 60);
 $expire_factor     = max(floatval($tr_cfg['peer_expire_factor']), 2);
-$peer_expire_time  = time() - floor($announce_interval * $expire_factor);
+//$peer_expire_time  = time() - floor($announce_interval * $expire_factor);
+$diff_time  = floor($announce_interval * $expire_factor);
 
 //$SQL = '';
 //$SQL .= "DELETE FROM announce WHERE update_time < $peer_expire_time;";
@@ -31,7 +32,9 @@ $peer_expire_time  = time() - floor($announce_interval * $expire_factor);
 //$dump_file_name = '/tmp/retracker_cron_dump';
 //file_put_contents($dump_file_name, $SQL. PHP_EOL . PHP_EOL , FILE_APPEND);
 
-$db = Database::getInstance();
+
+/*
+ * $db = Database::getInstance();
 $db->query("DELETE FROM announce WHERE update_time < $peer_expire_time;");
 if ($res = $db->query("SELECT DISTINCT(torrent_id) FROM announce;") ){
     $ids = [];
@@ -43,4 +46,9 @@ if ($res = $db->query("SELECT DISTINCT(torrent_id) FROM announce;") ){
         $db->query("UPDATE torrent SET seeders=0, leechers=0 WHERE torrent_id NOT IN ($ids);");
     }
 }
+*/
+
+$db = Database::getInstance();
+$db->query("DELETE LOW_PRIORITY FROM announce WHERE update_time < (UNIX_TIMESTAMP()-$diff_time);");
+$db->query("UPDATE LOW_PRIORITY bittorrent SET seeders=0, leechers=0, update_time=UNIX_TIMESTAMP() WHERE update_time < (UNIX_TIMESTAMP()-$diff_time);");
 exit;
