@@ -4,7 +4,7 @@
  *                              ANNOUNCER
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 26.10.2016. Last modified on 10.11.2016
+ * Created on 26.10.2016. Last modified on 11.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -251,6 +251,7 @@ if (!$output) {
 // Return data to client
 echo bencode($output);
 
+/*
 // TEST
 if (mt_rand(1, 100) <= 1) {
     $dump_file_name = '/tmp/retracker_announce_profiler';
@@ -258,5 +259,6 @@ if (mt_rand(1, 100) <= 1) {
     file_put_contents($dump_file_name, $str, FILE_APPEND);
     //file_put_contents($dump_file_name, $_SERVER['HTTP_USER_AGENT']. " - " . $_SERVER['QUERY_STRING']. PHP_EOL . PHP_EOL , FILE_APPEND);
 }
+*/
 
 exit;
