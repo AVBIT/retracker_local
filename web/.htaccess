@@ -26,7 +26,7 @@ Deny from all
         RewriteRule ^announce/?$ /announce_ng.php [L]
         RewriteRule ^announce.php/?$ /announce_ng.php [L]
         RewriteRule ^scrape/?$ /scrape.php [L]
-        RewriteRule ^scrape.php/?$ /scrape.php [L]
+        #RewriteRule ^scrape.php/?$ /scrape.php [L]
 
 
         #################################################################
