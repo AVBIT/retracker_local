@@ -4,7 +4,7 @@
  *                              CONFIG
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 02.03.2016. Last modified on 10.11.2016
+ * Created on 02.03.2016. Last modified on 11.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -34,11 +34,12 @@ define('CACHE', DIR_CACHE);   // if (defined('CACHE')) # Enable cache !!!
 
 // TWIG SETTINGS
 define('TEMPLATES', SELF . "views" . DS);
-//define('TWIG_CACHE', DIR_CACHE);   // if (defined('TWIG_CACHE')) # Enable TWIG cache !!!
+define('TWIG_CACHE', DIR_CACHE);   // if (defined('TWIG_CACHE')) # Enable TWIG cache !!!
 
 define('LANGUAGE', serialize(array(
     'en' => 'en',
-    'uk' => array('ru', 'uk'),
+    'uk' => 'uk',
+    //'uk' => array('ru', 'uk'),
     'ru' => array('ru', 'be', 'ky', 'ab', 'mo', 'et', 'lv'),
 )));
 

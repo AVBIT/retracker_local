@@ -89,18 +89,20 @@
                 <div class="col-lg-12">
                     <nav class="navbar navbar-default">
                         <div class="container-fluid">
-                            <div class="navbar-header">
+                            <div class="navbar-header" style="display:inline;">
                                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                                     <span class="sr-only">Toggle navigation</span>
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                 </button>
-                                <a class="navbar-brand" style="margin-left: 10%; font-size: large; font-weight: bold;" href="{{ base_path }}/">RETRACKER.LOCAL</a>
+                                <a class="navbar-brand" style="margin-left: 10%; font-size: large; font-weight: bold; text-align: center; min-width: 200px;" href="{{ base_path }}/">
+                                    {% trans "Magnet Flea Market" %}
+                                </a>
                             </div>
 
                             <!-- SEARCH -->
-                            <div class="col-sm-5 col-md-5">
+                            <div class="col-sm-5 col-sm-push-4 col-md-5 col-md-push-6 col-lg-offset-0 col-lg-push-0">
                                 <form class="navbar-form" role="search" method="POST" action="{{ base_path }}/search">
                                     <div class="input-group">
                                         <input type="text" class="form-control" placeholder="{% trans "Search" %}" name="search_query">

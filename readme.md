@@ -12,7 +12,7 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 1. Create MySQL database 'retracker' and create tables (sql/schema.sql);
 ```
 # mysql -uroot -p your_password
-# CREATE DATABASE `retracker` CHARACTER SET utf8 COLLATE utf8_general_ci;
+# CREATE DATABASE `retracker` CHARACTER SET cp1251 COLLATE cp1251_general_ci;
 # use retracker;
 # \. /path/to/sql/schema.sql
 ```
