@@ -121,7 +121,7 @@
 
                                     {% if account.is_adm == true %}
                                         <!-- Registered admin submenu -->
-                                        <li {% if navAction == 'stats' %} class='active' {% endif %} ><a href="{{ base_path }}/stats"><span class="glyphicon glyphicon-stats"></span> {% trans "Statistic" %} </a></li>
+                                        <li {% if navAction == 'statistic' %} class='active' {% endif %} ><a href="{{ base_path }}/statistic"><span class="glyphicon glyphicon-stats"></span> {% trans "Statistic" %} </a></li>
                                     {% endif %}
                                     {% if account.is_auth == true %}
                                         <!-- Registered user submenu -->

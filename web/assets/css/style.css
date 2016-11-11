@@ -17,9 +17,15 @@ html, body {
     padding: 0;
 }
 
+.title {
+    font-family: PixelCyrNormal;
+    font-weight: bolder;
+    font-size: large;
+}
+
 .warning {
-    font-size: 1em;
-    color: #D3054A
+    color: #D3054A;
+    font-size: medium;
 }
 
 table.info {

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: retracker.local\n"
 "Report-Msgid-Bugs-To: vmc@codegroove.net\n"
 "POT-Creation-Date: 2010-05-28 06:18-0500\n"
-"PO-Revision-Date: 2016-11-10 12:02+0200\n"
+"PO-Revision-Date: 2016-11-11 10:07+0200\n"
 "Language-Team: AVBIT <avbitinfo@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +41,9 @@ msgstr "Извините, страница на реконструкции"
 msgid "Active bittorrent network announcements"
 msgstr "Активные сетевые bittorrent анонсы"
 
+msgid "There are no active bittorrent network announcements."
+msgstr "Нет активных сетевых bittorrent анонсов."
+
 msgid "History of announcements"
 msgstr "История анонсов"
 
@@ -49,3 +52,6 @@ msgstr "Поиск"
 
 msgid "Search results"
 msgstr "Результаты поиска"
+
+msgid "Your search nothing has been found."
+msgstr "По Вашему запросу ничего не найдено."

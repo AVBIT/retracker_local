@@ -4,7 +4,7 @@
  *                       APPLICATION CONTROLLER
  * --------------------------------------------------------------------
  * Author V.Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 28.10.2016. Last modified on 10.11.2016
+ * Created on 28.10.2016. Last modified on 11.11.2016
  * --------------------------------------------------------------------
  */
 
@@ -37,7 +37,6 @@ define("BASE_PATH", $base_path);
 
 
 // Set language to Ukrainian
-//$language = "uk_UA.UTF-8";  // locality should be determined here
 //$language = "uk";  // locality should be determined here
 $language = LangDetect::getInstance()->getBestMatch();
 if (defined('LC_MESSAGES')) setlocale(LC_MESSAGES, $language); // Linux
@@ -72,7 +71,6 @@ if ($action == 'announces') {
             'page_title' => 'Magnet Flea market',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            //'current_date' => date('d.m.Y H:i',time()),
             'announces' => Announce::getInstance()->getHumanReadable(),
         )
     );
@@ -85,7 +83,6 @@ if ($action == 'announces') {
             'page_title' => 'History of announcements',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'current_date' => date('d.m.Y H:i',time()),
         )
     );
     exit;
@@ -100,7 +97,6 @@ if ($action == 'announces') {
             'page_title' => 'Search',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'current_date' => date('d.m.Y H:i',time()),
             'search_query' => $search_query,
             'search_result' => BitTorrent::getInstance()->Search($search_query),
         )
@@ -110,25 +106,27 @@ if ($action == 'announces') {
 
 } elseif ($action == 'faq' && Account::getInstance()->isAuth()) {
 
-    echo $twig->render('faq.twig', array(
+    $language = LangDetect::getInstance()->getBestMatch();
+    $template_filename = $language==='en' ? 'faq.twig' : 'faq_'.$language.'.twig';
+    $template_filename = file_exists(TEMPLATES.$template_filename) ? $template_filename : 'faq.twig';
+
+    echo $twig->render($template_filename, array(
             'base_path' => $base_path,
             'page_title' => 'FAQ',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'current_date' => date('d.m.Y H:i',time()),
         )
     );
 
     exit;
 
-} elseif ($action == 'stats' && Account::getInstance()->isAdm()) {
+} elseif ($action == 'statistic' && Account::getInstance()->isAdm()) {
 
-    echo $twig->render('empty_page.twig', array(
+    echo $twig->render('statistic.twig', array(
             'base_path' => $base_path,
             'page_title' => 'Statistic',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'current_date' => date('d.m.Y H:i',time()),
         )
     );
 
@@ -137,12 +135,11 @@ if ($action == 'announces') {
 } elseif ($action == 'profile' && Account::getInstance()->isAuth()) {
 
 
-    echo $twig->render('empty_page.twig', array(
+    echo $twig->render('profile.twig', array(
             'base_path' => $base_path,
             'page_title' => 'Profile',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'current_date' => date('d.m.Y H:i',time()),
         )
     );
     exit;
