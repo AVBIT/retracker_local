@@ -19,13 +19,14 @@ Deny from all
         RewriteEngine On
         RewriteBase /
 
-        #RewriteRule ^announce/?$ /announce_old.php [L]
-        #RewriteRule ^announce_old.php/?$ /announce_old.php [L]
+        #Lite version without GUI and SCRAPE-action (use only db table 'tracker')
+        #RewriteRule ^announce/?$ /announce_easy.php [L]
+        #RewriteRule ^announce_easy.php/?$ /announce_easy.php [L]
 
         RewriteRule ^announce/?$ /announce_ng.php [L]
         RewriteRule ^announce.php/?$ /announce_ng.php [L]
-        RewriteRule ^scrape/?$ /scrape_new.php [L]
-        RewriteRule ^scrape.php/?$ /scrape_new.php [L]
+        RewriteRule ^scrape/?$ /scrape.php [L]
+        RewriteRule ^scrape.php/?$ /scrape.php [L]
 
 
         #################################################################

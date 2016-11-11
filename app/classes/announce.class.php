@@ -8,7 +8,7 @@
  * Usage: $announce = Announce::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.03.2016. Last modified on 10.11.2016
+ * Created on 27.03.2016. Last modified on 11.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -98,24 +98,6 @@ class Announce {
             if (!empty($result)) return $result;
         }
 
-        /*
-        $SQL = "SELECT
-                  torrent.info_hash_hex,
-                  torrent.seeders,
-                  torrent.leechers,
-                  torrent.reg_time,
-                  torrent.update_time,
-                  torrent.`name`,
-                  torrent.size,
-                  torrent.`comment`
-                FROM
-                  announce
-                LEFT JOIN torrent ON torrent.torrent_id = announce.torrent_id
-                WHERE NOT ISNULL(announce.`name`) AND announce.`name` != ''
-                GROUP BY info_hash_hex
-                ORDER by update_time;
-                ";
-        */
         $SQL = "SELECT
                   info_hash_hex,
                   seeders,
@@ -193,7 +175,7 @@ class Announce {
         $result = bencode($output);
 
         // Save to cache
-        if (defined('CACHE')) @Cache::getInstance()->set('scrape_' . $info_hash_hex, $result, 120);
+        if (defined('CACHE')) @Cache::getInstance()->set('scrape_' . $info_hash_hex, $result, 60);
 
         return $result;
     }
