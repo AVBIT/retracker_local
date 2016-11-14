@@ -17,7 +17,7 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-sm-10 col-lg-offset-1">
+        <div class="col-md-12 col-lg-10 col-lg-offset-1">
 
             <br>
             <p align="center" class="title">{% trans "Search" %}: <span style="color: gray; font-weight: normal; ">'{{ search_query }}'</span></p>
@@ -50,7 +50,7 @@
                                 <td>
                                     <div>
                                         <a href="magnet:?xt=urn:btih:{{ one.info_hash_hex }}&dn={{ one.name }}&xl={{ one.size }}&tr=http://retracker.local/announce">{{ one.name }}</a>
-                                        <div style="text-align: center; font-size: smaller; color: lightgray; vertical-align:bottom;">InfoHashHex: {{ one.info_hash_hex }}</div>
+                                        <div class="info_hash_hex">InfoHashHex: {{ one.info_hash_hex }}</div>
                                     </div>
                                 </td>
                                 <td>{{ one.size|sizeHR }}</td>

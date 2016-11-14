@@ -73,4 +73,14 @@ table.info tbody tr.selected:hover {
 table.info tfoot {
     background-color: white;
 }
-*
+*/
+
+table.info tbody tr.selected .info_hash_hex{
+    text-align: center;
+    font-size: smaller;
+    color: lightgray;
+    vertical-align:bottom;
+}
+table.info tbody tr.selected:hover .info_hash_hex{
+    color: white;
+}

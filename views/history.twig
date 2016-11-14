@@ -17,7 +17,7 @@
 {% block content %}
 
     <div class="row">
-        <div class="col-sm-10 col-lg-offset-1">
+        <div class="col-md-12 col-lg-10 col-lg-offset-1">
 
             <form role="form" action='{{ base_path }}/history' method='POST'>
                 {% if announces.result %}
@@ -48,7 +48,7 @@
                                     <td>
                                         <div>
                                             <a href="magnet:?xt=urn:btih:{{ announce.info_hash_hex }}&dn={{ announce.name }}&xl={{ announce.size }}&tr=http://retracker.local/announce">{{ announce.name }}</a>
-                                            <div style="text-align: center; font-size: smaller; color: lightgray; vertical-align:bottom;">InfoHashHex: {{ announce.info_hash_hex }}</div>
+                                            <div class="info_hash_hex">InfoHashHex: {{ announce.info_hash_hex }}</div>
                                         </div>
                                     </td>
                                     <td>{{ announce.size|sizeHR }}</td>
