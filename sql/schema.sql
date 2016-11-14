@@ -5,7 +5,7 @@ Target Server Version : 50713
 File Encoding         : 65001
 
 Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
-Created on 02.03.2016. Last modified on 11.11.2016
+Created on 02.03.2016. Last modified on 14.11.2016
 */
 
 
@@ -63,5 +63,5 @@ CREATE TABLE `bittorrent` (
   `comment` varchar(255) NOT NULL DEFAULT '',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`info_hash_hex`),
-  KEY `name` (`name`) USING BTREE
+  FULLTEXT KEY `index_search` (`name`,`comment`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;

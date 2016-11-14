@@ -8,7 +8,7 @@
  * Usage: $bt = BitTorrent::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 10.11.2016. Last modified on 10.11.2016
+ * Created on 10.11.2016. Last modified on 14.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -48,34 +48,24 @@ class BitTorrent {
     public function Search($search_query) {
         $result = [];
         if (empty($search_query)) return $result;
+        $search_query = mb_convert_encoding($search_query, "CP1251", "UTF-8");
 
         $search_query_hash = SHA1($search_query);
 
-        /*
+
         // Read from cache
         if (defined('CACHE')){
-            $result=@Cache::getInstance()->get( __FUNCTION__ . $search_query_hash );
+            $result=@Cache::getInstance()->get( __FUNCTION__ .'_'. $search_query_hash );
             //var_dump($result);
             if (!empty($result)) return $result;
         }
-        */
+
 
         $search_query_sql = $this->db->real_escape_string($search_query);
 
-        $SQL = "SELECT
-                  info_hash_hex,
-                  seeders,
-                  leechers,
-                  `name`,
-                  `size`,
-                  `comment`,
-                  update_time
-                FROM
-                  bittorrent
-                WHERE `name` LIKE '%$search_query_sql%'
-                ";
+        // Fulltext search
+        $SQL = "SELECT * FROM bittorrent WHERE MATCH (`name`,`comment`) AGAINST ('$search_query_sql') LIMIT 200;"; // AGAINST ('$search_query_sql'  IN BOOLEAN MODE)
 
-        //echo $SQL; // test only
         if ($res = $this->db->query($SQL) ){
             while ($row = $res->fetch_assoc()){
                 if (isset($row['name'])) $row['name'] = mb_convert_encoding($row['name'], "UTF-8", "CP1251");
@@ -89,8 +79,40 @@ class BitTorrent {
             $res->close();
         }
 
+        // if empty do Like search
+        if (empty($result)){
+
+            $SQL = "SELECT
+                  info_hash_hex,
+                  seeders,
+                  leechers,
+                  `name`,
+                  `size`,
+                  `comment`,
+                  update_time
+                FROM
+                  bittorrent
+                WHERE `name` LIKE '%$search_query_sql%' OR `name` LIKE '$search_query_sql%' OR `name` LIKE '%$search_query_sql'
+                ORDER BY update_time DESC 
+                LIMIT 500;
+                ";
+
+            if ($res = $this->db->query($SQL) ){
+                while ($row = $res->fetch_assoc()){
+                    if (isset($row['name'])) $row['name'] = mb_convert_encoding($row['name'], "UTF-8", "CP1251");
+
+                    if (isset($row['comment'])) {
+                        // if URL... create hyperlink
+                        $row['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $row['comment']);
+                    }
+                    $result[] = $row;
+                }
+                $res->close();
+            }
+        }
+
         // Save to cache
-        //if (defined('CACHE')) @Cache::getInstance()->set( __FUNCTION__ . $search_query_hash , $result, 300);
+        if (defined('CACHE')) @Cache::getInstance()->set( __FUNCTION__ .'_'. $search_query_hash , $result, 120);
 
         return $result;
     }
@@ -107,6 +129,5 @@ class BitTorrent {
         $this->db->query($SQL);
         //file_put_contents('/tmp/retracker_announce_profiler', $SQL, FILE_APPEND);
     }
-
 
 }
