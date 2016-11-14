@@ -3,7 +3,7 @@
 /* -------                     CSS Document       	             ------- */
 /* --------------------------------------------------------------------- */
 /* ------- Author V.Avramenko aka Lordz (avbitinfo@gmail.com)    ------- */
-/* ------- Created on 02.11.2016. Modified on 11.11.2016         ------- */
+/* ------- Created on 02.11.2016. Modified on 14.11.2016         ------- */
 /* --------------------------------------------------------------------- */
 
 
@@ -19,8 +19,13 @@ html, body {
 
 .title {
     font-family: PixelCyrNormal;
-    font-weight: bolder;
+    font-weight: bold;
     font-size: large;
+}
+
+.pagination_selected {
+    background-color: lightgray;
+    font-weight: bold;
 }
 
 .warning {
@@ -35,23 +40,22 @@ table.info {
 table.info th, td {
     padding: 5px;
     text-align: center;
-
+    border-bottom: 1px solid #ddd;
 }
 table.info tr:nth-child(even){background-color: #f2f2f2}
 table.info thead {
-    background-color: darkkhaki;
     text-align: center;
     font-family: PixelCyrNormal;
 }
 table.info thead .title {
-    font-size: 1.5em;
-    color: white;
+    font-size: 1.4em;
     text-align: center;
  }
-
+/*
 table.info tbody {
-    background-color: lightyellow;
+    background-color: white;
 }
+*/
 
 table.info thead th, tfoot tr {
     text-align: center;
@@ -62,10 +66,11 @@ table.info tfoot tr {
 }
 
 table.info tbody tr.selected:hover {
-    background-color: khaki;
-    color: darkgreen;
+    background-color: lightgray;
 }
 
+/*
 table.info tfoot {
     background-color: white;
 }
+*
