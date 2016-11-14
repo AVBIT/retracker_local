@@ -63,5 +63,5 @@ CREATE TABLE `bittorrent` (
   `comment` varchar(255) NOT NULL DEFAULT '',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`info_hash_hex`),
-  FULLTEXT KEY `index_search` (`name`,`comment`)
+  FULLTEXT KEY `index_search` (`name`,`comment`,`info_hash_hex`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;

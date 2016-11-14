@@ -64,6 +64,7 @@ $twig->addFilter($filter_sizeHR);
 
 if ($action == 'announces') {
 
+    $page_num = (isset($_POST['page_num']) && is_numeric($_POST['page_num'])) ? (int)$_POST['page_num'] : 1;
     //var_dump(Announce::getInstance()->getHumanReadable());
 
     echo $twig->render('announces.twig', array(
@@ -71,18 +72,21 @@ if ($action == 'announces') {
             'page_title' => 'Magnet Flea market',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'announces' => Announce::getInstance()->getHumanReadable(),
+            'announces' => Announce::getInstance()->getHumanReadable($page_num),
         )
     );
     exit;
 
 } elseif ($action == 'history' && Account::getInstance()->isAuth()) {
 
+    $page_num = (isset($_POST['page_num']) && is_numeric($_POST['page_num'])) ? (int)$_POST['page_num'] : 1;
+
     echo $twig->render('history.twig', array(
             'base_path' => $base_path,
             'page_title' => 'History of announcements',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
+            'announces' => BitTorrent::getInstance()->getHumanReadable($page_num),
         )
     );
     exit;
@@ -90,6 +94,8 @@ if ($action == 'announces') {
 } elseif ($action == 'search' && Account::getInstance()->isAuth()) {
 
     $search_query = isset($_POST['search_query']) ? $_POST['search_query'] : '';
+    if (!isset($_SESSION['search_page_num'])) $_SESSION['search_page_num'] = 1;        // set default
+
     //var_dump(BitTorrent::getInstance()->Search($search_query));
 
     echo $twig->render('search.twig', array(

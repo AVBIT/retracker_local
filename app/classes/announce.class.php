@@ -8,7 +8,7 @@
  * Usage: $announce = Announce::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.03.2016. Last modified on 11.11.2016
+ * Created on 27.03.2016. Last modified on 14.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -88,46 +88,70 @@ class Announce {
         return $result;
     }
 
-    public function getHumanReadable(){
-        $result = [];
+    public function getHumanReadable($page = 1, $row_in_page = 20){
+
+        if ((int)$row_in_page < 10) $row_in_page = 10;
+        if ((int)$page < 1) $page = 1;
+        $offset = (int)$page*$row_in_page;
 
         // Read from cache
+        $cache_key = 'Announce_p'.$page;
         if (defined('CACHE')){
-            $result=@Cache::getInstance()->get( __FUNCTION__ . __CLASS__ );
+            $result=@Cache::getInstance()->get( $cache_key );
             //var_dump($result);
             if (!empty($result)) return $result;
         }
 
-        $SQL = "SELECT
+
+        $SQL = "SELECT                   
                   info_hash_hex,
-                  seeders,
-                  leechers,
+                  seeder,
                   `name`,
                   `size`,
                   `comment`,
-				  update_time
-                FROM
-                  bittorrent
-                WHERE seeders!=0 OR leechers!=0
-                ORDER BY update_time DESC;
-        ";
+				  update_time 
+				FROM $this->tablename ORDER BY update_time DESC;";
 
-        //echo $SQL; // test only
+        $arr=[];
         if ($res = $this->db->query($SQL) ){
             while ($row = $res->fetch_assoc()){
-                if (isset($row['name'])) $row['name'] = mb_convert_encoding($row['name'], "UTF-8", "CP1251");
-
-                if (isset($row['comment'])) {
-                    // if URL... create hyperlink
-                    $row['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $row['comment']);
+                $info_hash_hex = $row['info_hash_hex'];
+                if (!isset($arr[$info_hash_hex])){
+                    $arr[$info_hash_hex]['info_hash_hex'] = $info_hash_hex;
+                    $arr[$info_hash_hex]['seeders'] = 0;
+                    $arr[$info_hash_hex]['leechers'] = 0;
                 }
-                $result[] = $row;
+
+                if (isset($row['seeder']) && !empty($row['seeder'])) {
+                    $arr[$info_hash_hex]['seeders']++;
+                } else {
+                    $arr[$info_hash_hex]['leechers']++;
+                }
+                $arr[$info_hash_hex]['name'] = !empty($row['name']) ? mb_convert_encoding($row['name'], "UTF-8", "CP1251") : '';
+                $arr[$info_hash_hex]['size'] = $row['size'];
+                $arr[$info_hash_hex]['comment'] = !empty($row['comment']) ? mb_convert_encoding($row['comment'], "UTF-8", "CP1251") : '';
+                $arr[$info_hash_hex]['update_time'] = $row['update_time'];
+
+                if (isset($arr[$info_hash_hex]['comment'])) {
+                    // if URL... create hyperlink
+                    $arr[$info_hash_hex]['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $arr[$info_hash_hex]['comment']);
+                }
             }
             $res->close();
         }
 
+        // delete anonymous announcements
+        foreach ($arr as $key=>$value){
+            if (empty($arr[$key]['name']) && empty($arr[$key]['comment'])) unset($arr[$key]);
+        }
+
+        $result['page_num'] = (int)$page;
+        $result['pages'] = ceil(count($arr) / (int)$row_in_page)-1;
+        if ($result['page_num']>$result['pages']) $this->getHumanReadable(1,$row_in_page);
+        $result['result'] = array_slice($arr, $offset, $offset+$row_in_page);
+
         // Save to cache
-        if (defined('CACHE')) @Cache::getInstance()->set( __FUNCTION__ . __CLASS__ , $result, 10);
+        if (defined('CACHE')) @Cache::getInstance()->set( $cache_key , $result, 10);
 
         return $result;
     }
@@ -157,7 +181,7 @@ class Announce {
         }
 
         $seeders = $leechers = 0;
-        if ($res = Database::getInstance()->query("SELECT seeder FROM announce WHERE info_hash_hex='$info_hash_hex_sql';") ) {
+        if ($res = Database::getInstance()->query("SELECT seeder FROM $this->tablename WHERE info_hash_hex='$info_hash_hex_sql';") ) {
             while ($row = $res->fetch_assoc()){
                 if ($row['seeder']=1) {
                     $seeders++;
