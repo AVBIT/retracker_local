@@ -79,7 +79,8 @@ class BitTorrent {
                 if (isset($row['name'])) $row['name'] = mb_convert_encoding($row['name'], "UTF-8", "CP1251");
                 if (isset($row['comment'])) {
                     // if URL... create hyperlink
-                    $row['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $row['comment']);
+                    //$row['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $row['comment']);
+                    $row['comment'] = Uri::getInstance()->makeURL($row['comment']);
                 }
                 $result_arr[] = $row;
             }
@@ -109,7 +110,8 @@ class BitTorrent {
                     if (isset($row['name'])) $row['name'] = mb_convert_encoding($row['name'], "UTF-8", "CP1251");
                     if (isset($row['comment'])) {
                         // if URL... create hyperlink
-                        $row['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $row['comment']);
+                        //$row['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $row['comment']);
+                        $row['comment'] = Uri::getInstance()->makeURL($row['comment']);
                     }
                     $result_arr[] = $row;
                 }
@@ -167,7 +169,8 @@ class BitTorrent {
 
                 if (isset($row['comment'])) {
                     // if URL... create hyperlink
-                    $row['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $row['comment']);
+                    //$row['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $row['comment']);
+                    $row['comment'] = Uri::getInstance()->makeURL($row['comment']);
                 }
                 $result['result'][] = $row;
             }

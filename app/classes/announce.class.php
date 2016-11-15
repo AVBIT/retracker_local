@@ -134,7 +134,8 @@ class Announce {
 
                 if (isset($arr[$info_hash_hex]['comment'])) {
                     // if URL... create hyperlink
-                    $arr[$info_hash_hex]['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $arr[$info_hash_hex]['comment']);
+                    //$arr[$info_hash_hex]['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $arr[$info_hash_hex]['comment']);
+                    $arr[$info_hash_hex]['comment'] = Uri::getInstance()->makeURL($arr[$info_hash_hex]['comment']);
                 }
             }
             $res->close();
