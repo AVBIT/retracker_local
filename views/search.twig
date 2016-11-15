@@ -28,7 +28,7 @@
                         <table class="info">
                             <thead>
                             <tr>
-                                <th class="title" colspan="8"> {% trans "Search results for" %} <span style="color: gray; font-weight: normal; ">'{{ announces.search_query }}'</th>
+                                <th class="title" colspan="8"> {% trans "Search results for" %} <span style="color: gray; font-weight: normal; ">'{{ announces.search_query }}'</span></th>
                             </tr>
                             <tr>
                                 <td> seeders </td>
@@ -115,6 +115,7 @@
                     <!-- END ANNOUNCES LIST -->
                 {% else %}
                     <br>
+                    <p class="title"> {% trans "Search results for" %} <span style="color: gray; font-weight: normal; ">'{{ announces.search_query }}'</span></p>
                     <p align="center" class="title warning"><b>{% trans "Your search nothing has been found." %}</b> </p>
                 {% endif %}
             </form>
