@@ -4,7 +4,7 @@
  *                              CONFIG
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 02.03.2016. Last modified on 11.11.2016
+ * Created on 02.03.2016. Last modified on 15.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -15,8 +15,8 @@
 
 // DATABASE CONNECTION
 define("DB_HOST",    'localhost'); // localhost - the fastest connection via UNIX socket!!!
-define("DB_USER",    'root');
-define("DB_PSWD",    '');
+define("DB_USER",    'your_db_user');
+define("DB_PSWD",    'your_db_user_password');
 define("DB_NAME",    'retracker');
 define("DB_PORT",    3306);
 

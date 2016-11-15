@@ -37,7 +37,7 @@ define("BASE_PATH", $base_path);
 
 
 // Set language to Ukrainian
-//$language = "uk";  // locality should be determined here
+//$language = "ru";  // locality should be determined here
 $language = LangDetect::getInstance()->getBestMatch();
 if (defined('LC_MESSAGES')) setlocale(LC_MESSAGES, $language); // Linux
 putenv("LC_ALL={$language}"); // Windows
@@ -65,7 +65,6 @@ $twig->addFilter($filter_sizeHR);
 if ($action == 'announces') {
 
     $page_num = (isset($_POST['page_num']) && is_numeric($_POST['page_num'])) ? (int)$_POST['page_num'] : 1;
-    //var_dump(Announce::getInstance()->getHumanReadable());
 
     echo $twig->render('announces.twig', array(
             'base_path' => $base_path,
@@ -96,8 +95,6 @@ if ($action == 'announces') {
     $search_query = isset($_POST['search_query']) ? $_POST['search_query'] : '';
     $page_num = (isset($_POST['page_num']) && is_numeric($_POST['page_num'])) ? (int)$_POST['page_num'] : 1;
 
-    //var_dump(BitTorrent::getInstance()->Search($search_query));
-
     echo $twig->render('search.twig', array(
             'base_path' => $base_path,
             'page_title' => 'Search',
@@ -110,13 +107,9 @@ if ($action == 'announces') {
 
     exit;
 
-} elseif ($action == 'faq' && Account::getInstance()->isAuth()) {
+} elseif ($action == 'about' && Account::getInstance()->isAuth()) {
 
-    $language = LangDetect::getInstance()->getBestMatch();
-    $template_filename = $language==='en' ? 'faq.twig' : 'faq_'.$language.'.twig';
-    $template_filename = file_exists(TEMPLATES.$template_filename) ? $template_filename : 'faq.twig';
-
-    echo $twig->render($template_filename, array(
+    echo $twig->render('about.twig', array(
             'base_path' => $base_path,
             'page_title' => 'FAQ',
             'navAction' => $action,

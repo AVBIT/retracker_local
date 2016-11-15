@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: retracker.local\n"
 "Report-Msgid-Bugs-To: vmc@codegroove.net\n"
 "POT-Creation-Date: 2010-05-28 06:18-0500\n"
-"PO-Revision-Date: 2016-11-15 10:47+0200\n"
+"PO-Revision-Date: 2016-11-15 16:48+0200\n"
 "Language-Team: AVBIT <avbitinfo@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,14 +25,11 @@ msgstr "Анонси"
 msgid "History"
 msgstr "Історія"
 
-msgid "My announces"
-msgstr "Мої роздачі"
-
-msgid "FAQ"
-msgstr "Допомога (FAQ)"
-
 msgid "Statistic"
 msgstr "Статистика"
+
+msgid "About"
+msgstr "Про проект"
 
 msgid "Profile"
 msgstr "Профіль"
@@ -58,6 +55,7 @@ msgstr "Результати пошуку за запитом"
 msgid "Your search nothing has been found."
 msgstr "За Вашим запитом нічого не знайдено."
 
+# Pagination
 msgid "Page"
 msgstr "Сторінка"
 
@@ -69,3 +67,22 @@ msgstr "Перша сторінка"
 
 msgid "Last page"
 msgstr "Остання сторінка"
+
+# About the project
+msgid "About project"
+msgstr "Про проект"
+
+msgid "About the project [description]"
+msgstr "<p> Проект використовує ідею локального ретрекера (retracker.local) і на основі перехоплення анонсів, що розсилаються біттторент програмами в локальній мережі, формує базу даних Magnet-посилань. </p><p><b> Що робить проект:</b> першочергове завдання допомогти біттторент програмам знайти один одного в межах локальної мережі (чим досягається зменшення навантаження на магістральні канали провайдера, а для кінцевого користувача це означає збільшення швидкості закачування і здешевлення тарифу через зменшення зовнішнього трафіку). Попутно проект надає веб інтерфейс для людиноподібного релевантного пошуку анонса (файлу) по його імені або його хеш-коду. </p> <p> <b> Чого НЕ робить проект: </b> він не варить каву ... :-) і не роздає неліцензійний контент. <br> P/S. Якщо серед матеріалів знайдете щось неналежне, розцінюйте це як 'обличчя суспільства'. </p> "
+
+msgid "More about retracker.local"
+msgstr "Детальніше про retracker.local"
+
+msgid "More about retracker.local [description]"
+msgstr "<p><a href='https://ru.wikipedia.org/wiki/Ретрекер' target='_blank'>https://ru.wikipedia.org/wiki/Ретрекер</a></p>"
+
+msgid "More about Magnet URI scheme"
+msgstr "Детальніше про Magnet URI посилання"
+
+msgid "More about Magnet URI scheme [description]"
+msgstr "<p><a href='https://en.wikipedia.org/wiki/Magnet_URI_scheme' target='_blank'>https://en.wikipedia.org/wiki/Magnet_URI_scheme</a></p>"

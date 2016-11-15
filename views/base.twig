@@ -3,7 +3,7 @@
  *                              BASE TEMPLATE
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 28.10.2016. Last modified on 10.11.2016
+ * Created on 28.10.2016. Last modified on 15.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -119,12 +119,13 @@
                                     <li {% if navAction == 'announces' %}class='active'{% endif %}><a href="{{ base_path }}/"><span class="glyphicon glyphicon-magnet"></span> {% trans "Announces" %} </a></li>
                                     <li {% if navAction == 'history' %}class='active'{% endif %}><a href="{{ base_path }}/history"><span class="glyphicon glyphicon-cloud-download"></span> {% trans "History" %} </a></li>
 
-                                    <li {% if navAction == 'faq' %}class='active'{% endif %}><a href="{{ base_path }}/faq"><span class="glyphicon glyphicon-question-sign"></span> {% trans "FAQ" %} </a></li>
-
                                     {% if account.is_adm == true %}
                                         <!-- Registered admin submenu -->
                                         <li {% if navAction == 'statistic' %} class='active' {% endif %} ><a href="{{ base_path }}/statistic"><span class="glyphicon glyphicon-stats"></span> {% trans "Statistic" %} </a></li>
                                     {% endif %}
+
+                                    <li {% if navAction == 'about' %}class='active'{% endif %}><a href="{{ base_path }}/about"><span class="glyphicon glyphicon-info-sign"></span> {% trans "About" %} </a></li>
+
                                     {% if account.is_auth == true %}
                                         <!-- Registered user submenu -->
                                         <li {% if navAction == 'profile' %} class='active' {% endif %} ><a href="{{ base_path }}/profile"><span class="glyphicon glyphicon-cog"></span> {% trans "Profile" %}, [ {{ account.local_ip }} ] </a></li>
