@@ -55,7 +55,7 @@ class Account {
         $result = false;
         $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
         if (!empty($ip)){
-            $result = $this->isIPvsNET('10.11.45.0', '255.255.255.0');
+            $result = $this->isIPvsNET($ip,'10.11.45.0', '255.255.255.0');
             if ($ip=='::1' || $ip=='127.0.0.1') $result = true;
         }
         return $result;
