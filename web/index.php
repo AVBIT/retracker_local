@@ -4,7 +4,7 @@
  *                       APPLICATION CONTROLLER
  * --------------------------------------------------------------------
  * Author V.Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 28.10.2016. Last modified on 11.11.2016
+ * Created on 28.10.2016. Last modified on 15.11.2016
  * --------------------------------------------------------------------
  */
 
@@ -72,7 +72,7 @@ if ($action == 'announces') {
             'page_title' => 'Magnet Flea market',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'announces' => Announce::getInstance()->getHumanReadable($page_num),
+            'announces' => Announce::getInstance()->getHumanReadable($page_num, 20),
         )
     );
     exit;
@@ -86,7 +86,7 @@ if ($action == 'announces') {
             'page_title' => 'History of announcements',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'announces' => BitTorrent::getInstance()->getHumanReadable($page_num),
+            'announces' => BitTorrent::getInstance()->getHumanReadable($page_num, 20),
         )
     );
     exit;
@@ -94,7 +94,7 @@ if ($action == 'announces') {
 } elseif ($action == 'search' && Account::getInstance()->isAuth()) {
 
     $search_query = isset($_POST['search_query']) ? $_POST['search_query'] : '';
-    if (!isset($_SESSION['search_page_num'])) $_SESSION['search_page_num'] = 1;        // set default
+    $page_num = (isset($_POST['page_num']) && is_numeric($_POST['page_num'])) ? (int)$_POST['page_num'] : 1;
 
     //var_dump(BitTorrent::getInstance()->Search($search_query));
 
@@ -103,8 +103,8 @@ if ($action == 'announces') {
             'page_title' => 'Search',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'search_query' => $search_query,
-            'search_result' => BitTorrent::getInstance()->Search($search_query),
+            //'search_query' => strip_tags($search_query),
+            'announces' => BitTorrent::getInstance()->Search($search_query, $page_num, 20),
         )
     );
 

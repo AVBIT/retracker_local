@@ -19,60 +19,106 @@
     <div class="row">
         <div class="col-md-12 col-lg-10 col-lg-offset-1">
 
-            <br>
-            <p align="center" class="title">{% trans "Search" %}: <span style="color: gray; font-weight: normal; ">'{{ search_query }}'</span></p>
+            <form role="form" action='{{ base_path }}/{{ navAction }}' method='POST'>
+                <input type="hidden" name="search_query" value="{{ announces.search_query }}"/>
 
-            {% if search_result %}
-                <!-- BEGIN ANNOUNCES LIST -->
-                <div>
-                    <table class="info">
-                        <thead>
-                        <tr>
-                            <th class="title" colspan="8"> {% trans "Search results" %} </th>
-                        </tr>
-                        <tr>
-                            <td> seeders </td>
-                            <td> leechers </td>
-                            <td> name / info_hash_hex </td>
-                            <td> size </td>
-                            <td> comment </td>
-                            <td> update_time </td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- BEGIN announces_body -->
-                        {% set search_result_count = 0 %}
-                        {% for one in search_result %}
-                            {% set search_result_count = loop.length %}
-                            <tr class="selected">
-                                <td>{{ one.seeders }}</td>
-                                <td>{{ one.leechers }}</td>
-                                <td>
-                                    <div>
-                                        <a href="magnet:?xt=urn:btih:{{ one.info_hash_hex }}&dn={{ one.name }}&xl={{ one.size }}&tr=http://retracker.local/announce">{{ one.name }}</a>
-                                        <div class="info_hash_hex">InfoHashHex: {{ one.info_hash_hex }}</div>
-                                    </div>
-                                </td>
-                                <td>{{ one.size|sizeHR }}</td>
-                                <td>{{ one.comment|raw }}</td>
-                                <td>{{ one.update_time|date('d.m.Y H:i:s') }}</td>
+                {% if announces.result %}
+                    <!-- BEGIN ANNOUNCES LIST -->
+                    <div>
+                        <table class="info">
+                            <thead>
+                            <tr>
+                                <th class="title" colspan="8"> {% trans "Search results for" %} <span style="color: gray; font-weight: normal; ">'{{ announces.search_query }}'</th>
                             </tr>
-                        {% endfor %}
-                        <!-- END announces_body -->
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <th colspan="7"> {% trans "Total:" %} {{ search_result_count }} </th>
-                        </tr>
-                        </tfoot>
-                    </table>
+                            <tr>
+                                <td> seeders </td>
+                                <td> leechers </td>
+                                <td> name / info_hash_hex </td>
+                                <td> size </td>
+                                <td> comment </td>
+                                <td> update_time </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- BEGIN announces_body -->
+                            {% set announces_count = 0 %}
+                            {% for announce in announces.result %}
+                                {% set announces_count = loop.length %}
+                                <tr class="selected">
+                                    <td>{{ announce.seeders }}</td>
+                                    <td>{{ announce.leechers }}</td>
+                                    <td>
+                                        <div>
+                                            <a href="magnet:?xt=urn:btih:{{ announce.info_hash_hex }}&dn={{ announce.name }}&xl={{ announce.size }}&tr=http://retracker.local/announce">{{ announce.name }}</a>
+                                            <div class="info_hash_hex">InfoHashHex: {{ announce.info_hash_hex }}</div>
+                                        </div>
+                                    </td>
+                                    <td>{{ announce.size|sizeHR }}</td>
+                                    <td>{{ announce.comment|raw }}</td>
+                                    <td>{{ announce.update_time|date('d.m.Y H:i:s') }}</td>
+                                </tr>
+                            {% endfor %}
+                            <!-- END announces_body -->
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th colspan="7">
+                                    <hr>
+                                    {% trans "Page" %} {{ announces.page_num }} {% trans "of" %} {{ announces.pages }}
+                                    <!-- BEGIN PAGINATION -->
+                                    {% set page_num = announces.page_num %}
+                                    {% set pages_count = announces.pages %}
+                                    {% if pages_count > 1 %}
+                                        <div class="text-center">
+                                            <div class="btn-group btn-group-sm">
+                                                {% if page_num > 1 %}
+                                                    <button type="submit" class="btn btn-default" name="page_num" title="{% trans "First page" %}" value="1" ><span aria-hidden="true">&laquo;</span></button>
+                                                {% endif %}
 
-                </div>
-                <!-- END ANNOUNCES LIST -->
-            {% else %}
-                <br>
-                <p align="center" class="title warning"><b>{% trans "Your search nothing has been found." %}</b> </p>
-            {% endif %}
+                                                {% set first_num = 1 %}
+                                                {% set last_num = pages_count %}
+                                                {% set max_num = 10 %}
+
+                                                {% if pages_count > max_num %}
+                                                    {% set first_num = page_num-(max_num/2) %}
+                                                    {% if first_num <= 0 %}
+                                                        {% set first_num = 1 %}
+                                                        {% set diff = page_num-(max_num/2) %}
+                                                    {% endif %}
+
+                                                    {% set last_num = page_num+(max_num/2)-diff %}
+                                                    {% if last_num > pages_count %}
+                                                        {% set last_num = pages_count %}
+                                                    {% endif %}
+                                                {% endif %}
+
+                                                {% for i in range(first_num, last_num) %}
+                                                    {% if page_num == loop.index-1+first_num %}
+                                                        <button type="submit" class="btn btn-default pagination_selected" name="page_num" title="{% trans "Page" %} {{ i }}" value="{{ i }}" >{{ i }}</button>
+                                                    {% else %}
+                                                        <button type="submit" class="btn btn-default" name="page_num" title="{% trans "Page" %} {{ i }}" value="{{ i }}" >{{ i }}</button>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if page_num < pages_count %}
+                                                    <button type="submit" class="btn btn-default" name="page_num" title="{% trans "Last page" %}" value="{{ pages_count }}" ><span aria-hidden="true">&raquo;</span></button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <!-- END PAGINATION -->
+                                </th>
+                            </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                    <!-- END ANNOUNCES LIST -->
+                {% else %}
+                    <br>
+                    <p align="center" class="title warning"><b>{% trans "Your search nothing has been found." %}</b> </p>
+                {% endif %}
+            </form>
+
 
         </div>
     </div>

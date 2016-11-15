@@ -8,7 +8,7 @@
  * Usage: $announce = Announce::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.03.2016. Last modified on 14.11.2016
+ * Created on 27.03.2016. Last modified on 15.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -92,14 +92,14 @@ class Announce {
 
         if ((int)$row_in_page < 10) $row_in_page = 10;
         if ((int)$page < 1) $page = 1;
-        $offset = (int)$page*$row_in_page;
+        $offset = (int)$page*$row_in_page-$row_in_page;
 
         // Read from cache
-        $cache_key = 'Announce_p'.$page;
+        $cache_key = 'announce_p'.$page;
         if (defined('CACHE')){
-            $result=@Cache::getInstance()->get( $cache_key );
-            //var_dump($result);
-            if (!empty($result)) return $result;
+            $cache_result=@Cache::getInstance()->get( $cache_key );
+            //var_dump($cache_result);
+            if (!empty($cache_result)) return $cache_result;
         }
 
 
@@ -146,7 +146,7 @@ class Announce {
         }
 
         $result['page_num'] = (int)$page;
-        $result['pages'] = ceil(count($arr) / (int)$row_in_page)-1;
+        $result['pages'] = floor(count($arr) / (int)$row_in_page)+1;
         if ($result['page_num']>$result['pages']) $this->getHumanReadable(1,$row_in_page);
         $result['result'] = array_slice($arr, $offset, $offset+$row_in_page);
 
@@ -176,8 +176,8 @@ class Announce {
 
         // Read from cache
         if (defined('CACHE')){
-            $result=@Cache::getInstance()->get('scrape_' . $info_hash_hex);
-            if (!empty($result)) return $result;
+            $cache_result=@Cache::getInstance()->get('scrape_' . $info_hash_hex);
+            if (!empty($cache_result)) return $cache_result;
         }
 
         $seeders = $leechers = 0;
