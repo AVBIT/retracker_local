@@ -8,7 +8,7 @@
  * Usage: $bt = BitTorrent::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 10.11.2016. Last modified on 15.11.2016
+ * Created on 10.11.2016. Last modified on 16.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -77,11 +77,15 @@ class BitTorrent {
         if ($res = $this->db->query($SQL) ){
             while ($row = $res->fetch_assoc()){
                 if (isset($row['name'])) $row['name'] = mb_convert_encoding($row['name'], "UTF-8", "CP1251");
-                if (isset($row['comment'])) {
-                    // if URL... create hyperlink
-                    //$row['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $row['comment']);
-                    $row['comment'] = Uri::getInstance()->makeURL($row['comment']);
+
+                // create URL and URN
+                if (isset($row['info_hash_hex']) && isset($row['name']) && isset($row['size']) && isset($row['comment'])) {
+                    $row['magnet_urn'] = Uri::makeMagnetURN($row['info_hash_hex'],$row['name'],$row['size'],$row['comment']);
                 }
+                if (isset($row['comment'])) {
+                    $row['comment'] = Uri::makeURL($row['comment']);
+                }
+
                 $result_arr[] = $row;
             }
             $res->close();
@@ -108,11 +112,15 @@ class BitTorrent {
             if ($res = $this->db->query($SQL) ){
                 while ($row = $res->fetch_assoc()){
                     if (isset($row['name'])) $row['name'] = mb_convert_encoding($row['name'], "UTF-8", "CP1251");
-                    if (isset($row['comment'])) {
-                        // if URL... create hyperlink
-                        //$row['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $row['comment']);
-                        $row['comment'] = Uri::getInstance()->makeURL($row['comment']);
+
+                    // create URL and URN
+                    if (isset($row['info_hash_hex']) && isset($row['name']) && isset($row['size']) && isset($row['comment'])) {
+                        $row['magnet_urn'] = Uri::makeMagnetURN($row['info_hash_hex'],$row['name'],$row['size'],$row['comment']);
                     }
+                    if (isset($row['comment'])) {
+                        $row['comment'] = Uri::makeURL($row['comment']);
+                    }
+
                     $result_arr[] = $row;
                 }
                 $res->close();
@@ -167,11 +175,14 @@ class BitTorrent {
             while ($row = $res->fetch_assoc()){
                 if (isset($row['name'])) $row['name'] = mb_convert_encoding($row['name'], "UTF-8", "CP1251");
 
-                if (isset($row['comment'])) {
-                    // if URL... create hyperlink
-                    //$row['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $row['comment']);
-                    $row['comment'] = Uri::getInstance()->makeURL($row['comment']);
+                // create URL and URN
+                if (isset($row['info_hash_hex']) && isset($row['name']) && isset($row['size']) && isset($row['comment'])) {
+                    $row['magnet_urn'] = Uri::makeMagnetURN($row['info_hash_hex'],$row['name'],$row['size'],$row['comment']);
                 }
+                if (isset($row['comment'])) {
+                    $row['comment'] = Uri::makeURL($row['comment']);
+                }
+
                 $result['result'][] = $row;
             }
             $res->close();

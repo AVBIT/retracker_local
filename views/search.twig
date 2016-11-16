@@ -3,7 +3,7 @@
  *                             SEARCH TEMPLATE
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 10.11.2016. Last modified on 14.11.2016
+ * Created on 10.11.2016. Last modified on 16.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -49,7 +49,7 @@
                                     <td>{{ announce.leechers }}</td>
                                     <td>
                                         <div>
-                                            <a href="magnet:?xt=urn:btih:{{ announce.info_hash_hex }}&dn={{ announce.name }}&xl={{ announce.size }}&tr=http://retracker.local/announce">{{ announce.name }}</a>
+                                            <a href="{{ announce.magnet_urn }}">{{ announce.name }}</a>
                                             <div class="info_hash_hex">InfoHashHex: {{ announce.info_hash_hex }}</div>
                                         </div>
                                     </td>
@@ -125,7 +125,5 @@
     </div>
 
     <br><br><br><br>
-
-
 
 {% endblock %}

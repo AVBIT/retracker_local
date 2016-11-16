@@ -8,7 +8,7 @@
  * Usage: $announce = Announce::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.03.2016. Last modified on 15.11.2016
+ * Created on 27.03.2016. Last modified on 16.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -132,11 +132,9 @@ class Announce {
                 $arr[$info_hash_hex]['comment'] = !empty($row['comment']) ? mb_convert_encoding($row['comment'], "UTF-8", "CP1251") : '';
                 $arr[$info_hash_hex]['update_time'] = $row['update_time'];
 
-                if (isset($arr[$info_hash_hex]['comment'])) {
-                    // if URL... create hyperlink
-                    //$arr[$info_hash_hex]['comment'] = preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1">$1</a>', $arr[$info_hash_hex]['comment']);
-                    $arr[$info_hash_hex]['comment'] = Uri::getInstance()->makeURL($arr[$info_hash_hex]['comment']);
-                }
+                // create URL and URN
+                $arr[$info_hash_hex]['magnet_urn'] = Uri::makeMagnetURN($arr[$info_hash_hex]['info_hash_hex'],$arr[$info_hash_hex]['name'],$arr[$info_hash_hex]['size'],$arr[$info_hash_hex]['comment']);
+                $arr[$info_hash_hex]['comment'] = Uri::makeURL($arr[$info_hash_hex]['comment']);
             }
             $res->close();
         }

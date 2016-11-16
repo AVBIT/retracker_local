@@ -3,12 +3,11 @@
  * ----------------------------------------------------------------------------
  *                              URI CLASS
  * ----------------------------------------------------------------------------
- * URI (Universal Resource Identifier) class using Singleton pattern.
- * Only one instance of the class will be made, this requires less memory.
- * Usage: $uri = Uri::getInstance();
+ * URI (Universal Resource Identifier) class.
+ * Usage: $url = Uri::makeURL('http://example.com');
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 15.11.2016. Last modified on 15.11.2016
+ * Created on 15.11.2016. Last modified on 16.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -19,32 +18,11 @@
 
 class Uri {
 
-    private static $_instance; // The single instance
-
-    /**
-    * Get an instance of the class
-    * @return Instance
-    */
-    public static function getInstance() {
-        if(!self::$_instance) {
-            // If no instance then make one
-            self::$_instance = new self();
-        }
-        return self::$_instance;
-    }
-
-    public function __construct() {
-        //print "__construct(): " . __CLASS__ . ".class.php\n";
-    }
-
-    function __destruct() {
-        //print "__destruct(): " . __CLASS__ . ".class.php\n";
-    }
-
-    public static function getMagnetURN($info_hash_hex, $name='', $size=0){
+    public static function makeMagnetURN($info_hash_hex, $name='', $size=0, $comment=''){
         $result = 'magnet:?xt=urn:btih:' . $info_hash_hex;
         $result .= !empty($name) ?  "&dn=$name" : '';
         $result .= !empty($name) ?  "&dl=$size" : '';
+        //if (!empty($comment)) $result .= '&tr=' . Uri::getTrackerFromCommentURL($comment); // Don't work :(
         $result .= '&tr=http://retracker.local/announce';
         return $result;
     }
@@ -53,9 +31,18 @@ class Uri {
         return preg_replace("/[^\=\"]?(http:\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z0-9\-]+([\/]([a-zA-Z0-9_\/\-.?&%=+])*)*)/", '<a href="$1" target="_blank">$1</a>', $text);
     }
 
-    public static function getTrackerFromURL($text = ''){
+    /*
+    public static function getTrackerFromCommentURL($text = ''){ // Can not resolve announcer URL! Don't work :(
+        $result = '';
+        $parseUrl = parse_url(trim($text));
+        if ($parseUrl !== false){
+            if (isset($parseUrl['scheme']) && isset($parseUrl['host'])){
+                $result = $parseUrl['scheme'] . '://' . $parseUrl['host'] . '/announce';
+            }
+        }
 
+        return $result;
     }
-
+    */
 
 }
