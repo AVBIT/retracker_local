@@ -3,12 +3,15 @@
 /* -------                     CSS Document       	             ------- */
 /* --------------------------------------------------------------------- */
 /* ------- Author V.Avramenko aka Lordz (avbitinfo@gmail.com)    ------- */
-/* ------- Created on 02.11.2016. Modified on 15.11.2016         ------- */
+/* ------- Created on 02.11.2016. Modified on 16.11.2016         ------- */
 /* --------------------------------------------------------------------- */
 
 
-@font-face { font-family: PixelCyrNormal; src: url('../font/pixel_cyr_normal.ttf') format('truetype'); }
-
+@font-face {
+    font-family: PixelCyr-Normal;
+    src: url('font/pixel-cyr-normal.eot') format('embedded-opentype');
+    src: url('font/pixel-cyr-normal.eot?#iefix') format('embedded-opentype'), url('font/pixel-cyr-normal.ttf') format('truetype');
+}
 
 html, body {
     width: 100%;
@@ -18,7 +21,7 @@ html, body {
 }
 
 .title {
-    font-family: PixelCyrNormal;
+    font-family: PixelCyr-Normal;
     font-weight: bold;
     font-size: large;
     text-align: center;
@@ -46,7 +49,7 @@ table.info th, td {
 table.info tr:nth-child(even){background-color: #f2f2f2}
 table.info thead {
     text-align: center;
-    font-family: PixelCyrNormal;
+    font-family: PixelCyr-Normal;
 }
 table.info thead .title {
     font-size: 1.4em;
@@ -87,7 +90,7 @@ table.info tbody tr.selected:hover .info_hash_hex{
 }
 
 .faq .title{
-    font-family: PixelCyrNormal;
+    font-family: PixelCyr-Normal;
     font-weight: bold;
     font-size: large;
     text-align: center;

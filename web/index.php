@@ -4,7 +4,7 @@
  *                       APPLICATION CONTROLLER
  * --------------------------------------------------------------------
  * Author V.Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 28.10.2016. Last modified on 15.11.2016
+ * Created on 28.10.2016. Last modified on 16.11.2016
  * --------------------------------------------------------------------
  */
 
@@ -104,19 +104,6 @@ if ($action == 'announces') {
             'announces' => BitTorrent::getInstance()->Search($search_query, $page_num, 20),
         )
     );
-
-    exit;
-
-} elseif ($action == 'about' && Account::getInstance()->isAuth()) {
-
-    echo $twig->render('about.twig', array(
-            'base_path' => $base_path,
-            'page_title' => 'FAQ',
-            'navAction' => $action,
-            'account' => Account::getInstance()->get(),
-        )
-    );
-
     exit;
 
 } elseif ($action == 'statistic' && Account::getInstance()->isAdm()) {
@@ -128,17 +115,44 @@ if ($action == 'announces') {
             'account' => Account::getInstance()->get(),
         )
     );
-
     exit;
 
 } elseif ($action == 'profile' && Account::getInstance()->isAuth()) {
-
 
     echo $twig->render('profile.twig', array(
             'base_path' => $base_path,
             'page_title' => 'Profile',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
+        )
+    );
+    exit;
+
+} elseif ($action == 'about') {
+
+    echo $twig->render('about.twig', array(
+            'base_path' => $base_path,
+            'page_title' => 'FAQ',
+            'navAction' => $action,
+            'account' => Account::getInstance()->get(),
+        )
+    );
+    exit;
+
+} elseif ($action == 'faq') {
+
+    $language = LangDetect::getInstance()->getBestMatch();
+    $faq_file_name = TEMPLATES . 'faq_'. $language . '.html';
+    if (!file_exists($faq_file_name)){
+        $faq_file_name = TEMPLATES . 'faq_'. $language . '.html';
+    }
+
+    echo $twig->render('faq.twig', array(
+            'base_path' => $base_path,
+            'page_title' => 'FAQ',
+            'navAction' => $action,
+            'account' => Account::getInstance()->get(),
+            'custom_faq' => Account::getInstance()->get(),
         )
     );
     exit;
