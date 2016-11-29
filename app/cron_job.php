@@ -18,6 +18,8 @@ require_once 'autoload.php';
 // Garbage collector
 file_get_contents("http://retracker.local/announce.php?" . $tr_cfg['run_gc_key'] . "=1");
 
+Announce::getInstance()->SaveAllToHistory();
+
 /*
 $announce_interval = max(intval($tr_cfg['announce_interval']), 60);
 $expire_factor     = max(floatval($tr_cfg['peer_expire_factor']), 2);

@@ -5,7 +5,7 @@ Target Server Version : 50713
 File Encoding         : 65001
 
 Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
-Created on 02.03.2016. Last modified on 14.11.2016
+Created on 02.03.2016. Last modified on 23.11.2016
 */
 
 
@@ -28,7 +28,7 @@ CREATE TABLE `tracker` (
 
 
 -- ----------------------------
--- Table structure for `announce` (for  announce_ng.php)
+-- Table structure for `announce` (for  announce_ng.php && GUI && SCRAPE-action)
 -- ----------------------------
 DROP TABLE IF EXISTS `announce`;
 CREATE TABLE `announce` (
@@ -51,16 +51,30 @@ CREATE TABLE `announce` (
 ) ENGINE=MEMORY DEFAULT CHARSET=cp1251;
 
 -- ----------------------------
--- Table structure for `bittorrent` (for  announce_ng.php)
+-- Table structure for `announce_resolver` (for  announce_ng.php && GUI && SCRAPE-action)
 -- ----------------------------
-DROP TABLE IF EXISTS `bittorrent`;
-CREATE TABLE `bittorrent` (
+DROP TABLE IF EXISTS `announce_resolver`;
+CREATE TABLE `announce_resolver` (
   `info_hash_hex` char(40) NOT NULL DEFAULT '',
   `seeders` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `leechers` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `name` varchar(255) NOT NULL DEFAULT '',
   `size` bigint(20) unsigned NOT NULL DEFAULT '0',
   `comment` varchar(255) NOT NULL DEFAULT '',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`info_hash_hex`)
+) ENGINE=MEMORY DEFAULT CHARSET=cp1251;
+
+-- ----------------------------
+-- Table structure for `history` (for  announce_ng.php && GUI && SCRAPE-action)
+-- ----------------------------
+DROP TABLE IF EXISTS `history`;
+CREATE TABLE `history` (
+  `info_hash_hex` char(40) NOT NULL DEFAULT '',
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `size` bigint(20) unsigned NOT NULL DEFAULT '0',
+  `comment` varchar(255) NOT NULL DEFAULT '',
+  `reg_time` int(11) unsigned NOT NULL DEFAULT '0',
   `update_time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`info_hash_hex`),
   FULLTEXT KEY `index_search` (`name`,`comment`,`info_hash_hex`)

@@ -1,14 +1,14 @@
 <?php
 /**
  * ----------------------------------------------------------------------------
- *                              BitTorrent CLASS
+ *                              History CLASS
  * ----------------------------------------------------------------------------
- * BitTorrent class using Singleton pattern.
+ * History class using Singleton pattern.
  * Only one instance of the class will be made, this requires less memory.
- * Usage: $bt = BitTorrent::getInstance();
+ * Usage: $history = BitTorrent::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 10.11.2016. Last modified on 16.11.2016
+ * Created on 10.11.2016. Last modified on 22.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -17,7 +17,7 @@
  */
 
 
-class BitTorrent {
+class History {
 
     private static $_instance; // The single instance
 
@@ -35,7 +35,7 @@ class BitTorrent {
 
     public function __construct() {
 
-        $this->tablename = 'bittorrent';
+        $this->tablename = 'history';
         $this->db = Database::getInstance();
 
         //print "__construct(): " . __CLASS__ . ".class.php\n";
@@ -72,7 +72,21 @@ class BitTorrent {
         $result_arr = [];
 
         // Fulltext search
-        $SQL = "SELECT * FROM $this->tablename WHERE MATCH (`name`,`comment`, info_hash_hex) AGAINST ('$search_query_sql');"; // AGAINST ('$search_query_sql'  IN BOOLEAN MODE)
+        $SQL = "SELECT
+                  history.info_hash_hex,
+                  history.`name`,
+                  history.size,
+                  history.`comment`,
+                  history.update_time,
+                  history.reg_time,
+                  COALESCE(announce_resolver.seeders, 0) AS seeders, 
+                  COALESCE(announce_resolver.leechers, 0) AS leechers
+                FROM
+                  history
+                LEFT JOIN announce_resolver ON history.info_hash_hex = announce_resolver.info_hash_hex
+                WHERE MATCH (history.`name`,history.`comment`, history.info_hash_hex) AGAINST ('$search_query_sql');
+              ";
+        //echo $SQL . PHP_EOL . '<br>';
 
         if ($res = $this->db->query($SQL) ){
             while ($row = $res->fetch_assoc()){
@@ -95,19 +109,22 @@ class BitTorrent {
         if (empty($result_arr)){
 
             $SQL = "SELECT
-                  info_hash_hex,
-                  seeders,
-                  leechers,
-                  `name`,
-                  `size`,
-                  `comment`,
-                  update_time
+                  history.info_hash_hex,
+                  history.`name`,
+                  history.size,
+                  history.`comment`,
+                  history.update_time,
+                  history.reg_time,
+                  COALESCE(announce_resolver.seeders, 0) AS seeders, 
+                  COALESCE(announce_resolver.leechers, 0) AS leechers
                 FROM
-                  $this->tablename
-                WHERE `name` LIKE '%$search_query_sql%' OR `name` LIKE '$search_query_sql%' OR `name` LIKE '%$search_query_sql'
+                  history
+                LEFT JOIN announce_resolver ON history.info_hash_hex = announce_resolver.info_hash_hex
+                WHERE history.`name` LIKE '%$search_query_sql%' OR history.`name` LIKE '$search_query_sql%' OR history.`name` LIKE '%$search_query_sql'
                 ORDER BY update_time DESC
                 LIMIT 1000;
                 ";
+            //echo $SQL . PHP_EOL . '<br>';
 
             if ($res = $this->db->query($SQL) ){
                 while ($row = $res->fetch_assoc()){
@@ -138,17 +155,27 @@ class BitTorrent {
         return $result;
     }
 
-    public function Save($info_hash_hex,$name,$size,$comment,$seeders=0,$leechers=0){
+    public function Save($info_hash_hex,$name,$size=0,$comment='',$update_time=0){
 
-        if (empty($info_hash_hex) || empty($name) || empty($size) || empty($comment)) return;
+        if (empty($info_hash_hex) || empty($name)) return;
+        //$info_hash_hex = $this->db->real_escape_string($info_hash_hex);
+        //$name = $this->db->real_escape_string($name);
+        //$comment = $this->db->real_escape_string($comment);
+        //$size = is_numeric($size) ? (int)$size : 0;
+        //$update_time = is_numeric($update_time) ? (int)$update_time : 0;
 
-        $SQL = "REPLACE DELAYED INTO $this->tablename
-				(info_hash_hex, seeders, leechers, `name`, `size`, `comment`, update_time)
-			VALUES
-				('$info_hash_hex', '$seeders', '$leechers', '$name', " . ($size > 0 ? $size : 0) . ", '$comment', UNIX_TIMESTAMP());
+        $SQL = "INSERT DELAYED INTO $this->tablename
+				  (info_hash_hex, `name`, `size`, `comment`, reg_time, update_time)
+			    VALUES
+				  ('$info_hash_hex', '$name', " . ($size > 0 ? $size : 0) . ", '$comment', UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
+			    ON DUPLICATE KEY UPDATE 
+			        `name`= IF (LENGTH(`name`)<LENGTH('$name'),'$name',`name`),
+			        `size`= IF (`size`<$size,'$size',`size`),
+			        `comment`= IF (LENGTH(`comment`)<LENGTH('$comment'),'$comment',`comment`),
+			        `update_time`= IF (`update_time`<$update_time,'$update_time',`update_time`);
 			";
         $this->db->query($SQL);
-        //file_put_contents('/tmp/retracker_profiler', $SQL, FILE_APPEND);
+        //file_put_contents('/tmp/retracker_profiler', $SQL . PHP_EOL . "AFFECTED_ROWS:".$this->db->affected_rows . PHP_EOL, FILE_APPEND);
     }
 
     public function getHumanReadable($page = 1, $row_in_page = 20){
@@ -161,7 +188,6 @@ class BitTorrent {
         if ((int)$page < 1) $page = 1;
         $offset = (int)$page*$row_in_page-$row_in_page;
 
-
         // Read from cache
         $cache_key = 'history_p'.$page;
         if (defined('CACHE')){
@@ -169,8 +195,22 @@ class BitTorrent {
             if (!empty($cache_result)) return $cache_result;
         }
 
-        $SQL = "SELECT * FROM $this->tablename ORDER BY update_time DESC LIMIT $row_in_page OFFSET $offset;";
+        $SQL = "SELECT
+                  history.info_hash_hex,
+                  history.`name`,
+                  history.size,
+                  history.`comment`,
+                  history.update_time,
+                  history.reg_time,
+                  COALESCE(announce_resolver.seeders, 0) AS seeders, 
+                  COALESCE(announce_resolver.leechers, 0) AS leechers
+                FROM
+                  history
+                LEFT JOIN announce_resolver ON history.info_hash_hex = announce_resolver.info_hash_hex
+                ORDER BY update_time DESC LIMIT $row_in_page OFFSET $offset;
+        ";
         //echo $SQL;
+
         if ($res = $this->db->query($SQL) ){
             while ($row = $res->fetch_assoc()){
                 if (isset($row['name'])) $row['name'] = mb_convert_encoding($row['name'], "UTF-8", "CP1251");

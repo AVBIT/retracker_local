@@ -8,7 +8,7 @@
  * Usage: $announce = Announce::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.03.2016. Last modified on 16.11.2016
+ * Created on 27.03.2016. Last modified on 22.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -88,6 +88,43 @@ class Announce {
         return $result;
     }
 
+    public function Save($info_hash_hex,$name='',$size=0,$comment='',$seeders=0,$leechers=0){
+
+        if (empty($info_hash_hex)) return;
+        $info_hash_hex = $this->db->real_escape_string($info_hash_hex);
+        $name = $this->db->real_escape_string($name);
+        $comment = $this->db->real_escape_string($comment);
+        $size = is_numeric($size) ? (int)$size : 0;
+        $seeders = is_numeric($seeders) ? (int)$seeders : 0;
+        $leechers = is_numeric($leechers) ? (int)$leechers : 0;
+
+        $SQL = "INSERT DELAYED INTO announce_resolver
+				(info_hash_hex, seeders, leechers, `name`, `size`, `comment`, update_time)
+			VALUES
+				('$info_hash_hex', '$seeders', '$leechers', '$name', " . ($size > 0 ? $size : 0) . ", '$comment', UNIX_TIMESTAMP())
+			ON DUPLICATE KEY UPDATE seeders = '$seeders', leechers = '$leechers', update_time = UNIX_TIMESTAMP();
+			";
+        $this->db->query($SQL);
+
+        // test!!! Put to cron job!!!
+        //if (mt_rand(1, 10000) <= 1) $this->SaveAllToHistory();
+    }
+
+    public function SaveAllToHistory(){
+
+        $SQL = "SELECT info_hash_hex, `name`, `size`, `comment`, update_time 
+                FROM announce_resolver
+                WHERE `name`!='' AND `size`>0;
+			    ";
+        if ($res = $this->db->query($SQL) ){
+            while ($row = $res->fetch_assoc()){
+                History::getInstance()->Save($row['info_hash_hex'],$row['name'],(int)$row['size'],$row['comment'],$row['update_time']);
+            }
+            $res->close();
+        }
+
+    }
+
     public function getHumanReadable($page = 1, $row_in_page = 20){
 
         if ((int)$row_in_page < 10) $row_in_page = 10;
@@ -102,46 +139,31 @@ class Announce {
             if (!empty($cache_result)) return $cache_result;
         }
 
-
         $SQL = "SELECT                   
                   info_hash_hex,
-                  seeder,
+                  seeders,
+                  leechers,
                   `name`,
                   `size`,
                   `comment`,
 				  update_time 
-				FROM $this->tablename ORDER BY update_time DESC;";
+				FROM announce_resolver 
+				WHERE `name`!='' AND `size`>0
+				ORDER BY update_time DESC;";
 
         $arr=[];
         if ($res = $this->db->query($SQL) ){
             while ($row = $res->fetch_assoc()){
-                $info_hash_hex = $row['info_hash_hex'];
-                if (!isset($arr[$info_hash_hex])){
-                    $arr[$info_hash_hex]['info_hash_hex'] = $info_hash_hex;
-                    $arr[$info_hash_hex]['seeders'] = 0;
-                    $arr[$info_hash_hex]['leechers'] = 0;
-                }
 
-                if (isset($row['seeder']) && !empty($row['seeder'])) {
-                    $arr[$info_hash_hex]['seeders']++;
-                } else {
-                    $arr[$info_hash_hex]['leechers']++;
-                }
-                $arr[$info_hash_hex]['name'] = !empty($row['name']) ? mb_convert_encoding($row['name'], "UTF-8", "CP1251") : '';
-                $arr[$info_hash_hex]['size'] = $row['size'];
-                $arr[$info_hash_hex]['comment'] = !empty($row['comment']) ? mb_convert_encoding($row['comment'], "UTF-8", "CP1251") : '';
-                $arr[$info_hash_hex]['update_time'] = $row['update_time'];
+                $row['name'] = !empty($row['name']) ? mb_convert_encoding($row['name'], "UTF-8", "CP1251") : '';
+                $row['comment'] = !empty($row['comment']) ? mb_convert_encoding($row['comment'], "UTF-8", "CP1251") : '';
 
                 // create URL and URN
-                $arr[$info_hash_hex]['magnet_urn'] = Uri::makeMagnetURN($arr[$info_hash_hex]['info_hash_hex'],$arr[$info_hash_hex]['name'],$arr[$info_hash_hex]['size'],$arr[$info_hash_hex]['comment']);
-                $arr[$info_hash_hex]['comment'] = Uri::makeURL($arr[$info_hash_hex]['comment']);
+                $row['magnet_urn'] = Uri::makeMagnetURN($row['info_hash_hex'],$row['name'],$row['size'],$row['comment']);
+                $row['comment'] = Uri::makeURL($row['comment']);
+                $arr[] = $row;
             }
             $res->close();
-        }
-
-        // delete anonymous announcements
-        foreach ($arr as $key=>$value){
-            if (empty($arr[$key]['name']) && empty($arr[$key]['comment'])) unset($arr[$key]);
         }
 
         $result['page_num'] = (int)$page;
@@ -151,6 +173,41 @@ class Announce {
 
         // Save to cache
         if (defined('CACHE')) @Cache::getInstance()->set( $cache_key , $result, 10);
+
+        return $result;
+    }
+
+    public function getStatistic (){
+
+        $result['count_peers'] = 0;
+        $result['count_seeders'] = 0;
+        $result['count_leechers'] = 0;
+
+        $result['count_info_hash_announce'] = 0;
+        $result['count_info_hash_history'] = 0;
+
+        $result['count_resolved_info_hash'] = 0;
+        $result['count_unknoun_info_hash'] = 0;
+
+
+        $SQL = "SELECT seeders, leechers, `name`, `size` FROM announce_resolver;";
+
+        if ($res = $this->db->query($SQL) ) {
+            while ($row = $res->fetch_assoc()) {
+                $result['count_seeders'] += $row['seeders'];
+                $result['count_leechers'] += $row['leechers'];
+
+                $result['count_info_hash_announce']++;
+                if (!empty($row['name'])){
+                    $result['count_resolved_info_hash']++;
+                } else {
+                    $result['count_unknoun_info_hash']++;
+                }
+            }
+            $res->close();
+        }
+        $result['count_peers'] = $result['count_seeders'] + $result['count_leechers'];
+        $result['count_info_hash_history'] = History::getInstance()->getTableRecordsCount();
 
         return $result;
     }

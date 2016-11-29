@@ -37,6 +37,7 @@
                                 <td> size </td>
                                 <td> comment </td>
                                 <td> update_time </td>
+                                <td> reg_time </td>
                             </tr>
                             </thead>
                             <tbody>
@@ -56,6 +57,7 @@
                                     <td>{{ announce.size|sizeHR }}</td>
                                     <td>{{ announce.comment|raw }}</td>
                                     <td>{{ announce.update_time|date('d.m.Y H:i:s') }}</td>
+                                    <td>{{ announce.reg_time|date('d.m.Y H:i:s') }}</td>
                                 </tr>
                             {% endfor %}
                             <!-- END announces_body -->

@@ -4,7 +4,7 @@
  *                              ANNOUNCER
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 26.10.2016. Last modified on 14.11.2016
+ * Created on 26.10.2016. Last modified on 22.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -38,6 +38,7 @@ if (!empty($_GET[$tr_cfg['run_gc_key']])) {
 
 	//$db->query("DELETE FROM announce WHERE update_time < $peer_expire_time;");
     $db->query("DELETE LOW_PRIORITY FROM announce WHERE update_time < (UNIX_TIMESTAMP()-$diff_time);");
+    $db->query("DELETE LOW_PRIORITY FROM announce_resolver WHERE update_time < (UNIX_TIMESTAMP()-$diff_time);");
     //$db->query("UPDATE LOW_PRIORITY bittorrent SET seeders=0, leechers=0, update_time=UNIX_TIMESTAMP() WHERE update_time < (UNIX_TIMESTAMP()-$diff_time);");
     $db->query("UPDATE LOW_PRIORITY bittorrent SET seeders=0, leechers=0 WHERE update_time < (UNIX_TIMESTAMP()-$diff_time) AND (seeders!=0 OR leechers!=0);");
 	die();
@@ -230,10 +231,7 @@ if (!$output) {
         $res->close();
     }
 
-    if (!empty($info_hash_hex) || !empty($name) || !empty($size) || !empty($comment)){
-        // save torrent info (will be use for search)
-        BitTorrent::getInstance()->Save($info_hash_hex,$name,(int)$size,$comment,(int)$seeders,(int)$leechers);
-    }
+    Announce::getInstance()->Save($info_hash_hex,$name,(int)$size,$comment,(int)$seeders,(int)$leechers);
 
     // Generate output
     $ann_interval = $tr_cfg['announce_interval'] + mt_rand(0, 60);

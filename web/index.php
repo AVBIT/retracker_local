@@ -4,7 +4,7 @@
  *                       APPLICATION CONTROLLER
  * --------------------------------------------------------------------
  * Author V.Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 28.10.2016. Last modified on 16.11.2016
+ * Created on 28.10.2016. Last modified on 22.11.2016
  * --------------------------------------------------------------------
  */
 
@@ -85,15 +85,16 @@ if ($action == 'announces') {
             'page_title' => 'History of announcements',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'announces' => BitTorrent::getInstance()->getHumanReadable($page_num, 20),
+            'announces' => History::getInstance()->getHumanReadable($page_num, 20),
         )
     );
     exit;
 
 } elseif ($action == 'search' && Account::getInstance()->isAuth()) {
 
-    $search_query = isset($_POST['search_query']) ? $_POST['search_query'] : '';
     $page_num = (isset($_POST['page_num']) && is_numeric($_POST['page_num'])) ? (int)$_POST['page_num'] : 1;
+    $search_query = isset($_POST['search_query']) ? $_POST['search_query'] : '';
+    if (isset($params[0]) && !empty($params[0])) $search_query = urldecode($params[0]);
 
     echo $twig->render('search.twig', array(
             'base_path' => $base_path,
@@ -101,18 +102,22 @@ if ($action == 'announces') {
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
             //'search_query' => strip_tags($search_query),
-            'announces' => BitTorrent::getInstance()->Search($search_query, $page_num, 20),
+            'announces' => History::getInstance()->Search($search_query, $page_num, 20),
         )
     );
     exit;
 
 } elseif ($action == 'statistic' && Account::getInstance()->isAdm()) {
 
+    //var_dump(Announce::getInstance()->getStatistic());
+
     echo $twig->render('statistic.twig', array(
             'base_path' => $base_path,
             'page_title' => 'Statistic',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
+
+            'statistic' => Announce::getInstance()->getStatistic(),
         )
     );
     exit;
