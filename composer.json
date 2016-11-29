@@ -1,4 +1,25 @@
 {
+    "name": "Magnet Flea market",
+    "description": "The project uses the idea of ​​a local retracker (retracker.local) and based on the interception of announcements, that are sent bitttorent programs on the local network, forms Magnet-reference database.",
+    "license": "THE BEER-WARE LICENSE",
+    "keywords": [
+        "retracker.local",
+        "Magnet Flea market"
+    ],
+    "authors": [
+        {
+            "name": "Viacheslav Avramenko (aka Lordz)",
+            "email": "avbitinfo@gmail.com",
+            "homepage": "",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/AVBIT/retracker_local/branches/all"
+    },
+    "autoload": {
+        "files": ["app/autoload.php"]
+    },
     "require": {
         "TWIG/TWIG": "^1.27",
         "twbs/bootstrap": "^3.3",
