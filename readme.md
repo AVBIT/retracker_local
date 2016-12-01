@@ -26,7 +26,15 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 6. Create DNS name "retracker.local" (subscribers will be use URL: http://retracker.local/announce).
 7. Create cron job for run garbage collector. (add line in crontab file, example):
 ```
-*/5    *       *       *       *       root    cd /usr/www/retracker_local/app/ && php cron_job.php > /dev/null 2>&1
+*/5    *       *       *       *       root    cd /usr/www/retracker_local/app/bin/ && php cron_job.php > /dev/null 2>&1
+```
+8. Install 'python' and 'libtorrent-rasterbar-python'. It is not necessary, but desirable, because in practice many network announcements do not have the name and size and they will not be displayed on the web site. (Example for FreeBSD):
+```
+# cd /usr/ports/lang/python 
+# make install clean
+...
+# cd /usr/ports/net-p2p/libtorrent-rasterbar-python
+# make install clean
 ```
 
 

@@ -14,7 +14,8 @@
 
 header('Content-Type: text/plain; charset=UTF-8', true);
 
-require_once '../app/autoload.php';
+//require_once '../app/autoload.php';
+require_once __DIR__ . '/../app/autoload.php';
 
 $time_start = microtime(true); // for test only!!!
 

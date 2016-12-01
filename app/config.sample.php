@@ -26,11 +26,15 @@ define('SELF',      substr(dirname(__FILE__),0,-3));
 
 define('DIR_VAR', 	SELF."var".DS);
 define('DIR_CACHE', DIR_VAR."cache".DS);
+define('DIR_LOG',   DIR_VAR."log".DS);
 //define('DIR_SESSION', DIR_VAR."session".DS);
 
+//LOG SETTINGS
+define('LOG_LEVEL', 3);     // if (defined('LOG_LEVEL')) # Enable logging !!! (TRACE=1, DEBUG, INFO, WARNING, ERROR, FATAL=6)
+
 // CLASS CACHE
-define('CACHE', DIR_CACHE);   // if (defined('CACHE')) # Enable cache !!!
-//define('CACHETYPE', "file");            // CACHETYPE value: file/redis ; default: file
+define('CACHE', DIR_CACHE);         // if (defined('CACHE')) # Enable cache !!!
+//define('CACHETYPE', "file");      // CACHETYPE value: file/redis ; default: file
 
 // TWIG SETTINGS
 define('TEMPLATES', SELF . "views" . DS);

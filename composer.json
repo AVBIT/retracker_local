@@ -2,6 +2,8 @@
     "name": "Magnet Flea market",
     "description": "The project uses the idea of ​​a local retracker (retracker.local) and based on the interception of announcements, that are sent bitttorent programs on the local network, forms Magnet-reference database.",
     "license": "THE BEER-WARE LICENSE",
+    "version": "1.0.0-dev",
+    "type": "project",
     "keywords": [
         "retracker.local",
         "Magnet Flea market"

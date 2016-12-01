@@ -8,7 +8,7 @@
  * Usage: $announce = Announce::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.03.2016. Last modified on 22.11.2016
+ * Created on 27.03.2016. Last modified on 30.11.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -90,21 +90,33 @@ class Announce {
 
     public function Save($info_hash_hex,$name='',$size=0,$comment='',$seeders=0,$leechers=0){
 
-        if (empty($info_hash_hex)) return;
-        $info_hash_hex = $this->db->real_escape_string($info_hash_hex);
-        $name = $this->db->real_escape_string($name);
-        $comment = $this->db->real_escape_string($comment);
-        $size = is_numeric($size) ? (int)$size : 0;
-        $seeders = is_numeric($seeders) ? (int)$seeders : 0;
-        $leechers = is_numeric($leechers) ? (int)$leechers : 0;
+        try {
+            if (empty($info_hash_hex)) return;
+            $info_hash_hex = $this->db->real_escape_string($info_hash_hex);
+            $name = $this->db->real_escape_string($name);
+            $comment = $this->db->real_escape_string($comment);
+            $size = is_numeric($size) ? (int)$size : 0;
+            $seeders = is_numeric($seeders) ? (int)$seeders : 0;
+            $leechers = is_numeric($leechers) ? (int)$leechers : 0;
 
-        $SQL = "INSERT DELAYED INTO announce_resolver
+            $SQL = "INSERT DELAYED INTO announce_resolver
 				(info_hash_hex, seeders, leechers, `name`, `size`, `comment`, update_time)
 			VALUES
-				('$info_hash_hex', '$seeders', '$leechers', '$name', " . ($size > 0 ? $size : 0) . ", '$comment', UNIX_TIMESTAMP())
+				('$info_hash_hex', '$seeders', '$leechers', '$name', '$size', '$comment', UNIX_TIMESTAMP())
 			ON DUPLICATE KEY UPDATE seeders = '$seeders', leechers = '$leechers', update_time = UNIX_TIMESTAMP();
 			";
-        $this->db->query($SQL);
+
+            if ($this->db->query($SQL) === false){
+                throw new Exception(__METHOD__ . PHP_EOL . $SQL . PHP_EOL. $this->db->error );
+            }
+
+        } catch (Throwable $t) {
+            // Executed only in PHP 7, will not match in PHP 5.x
+            Log::getInstance()->addError($t->getMessage());
+        } catch (Exception $e) {
+            // Executed only in PHP 5.x, will not be reached in PHP 7
+            Log::getInstance()->addError($e->getMessage());
+        }
 
         // test!!! Put to cron job!!!
         //if (mt_rand(1, 10000) <= 1) $this->SaveAllToHistory();
