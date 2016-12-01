@@ -52,7 +52,7 @@ class Resolver
 
     public function resolveAllAnnounces(){
         try {
-            $SQL = "SELECT * FROM $this->tablename_resolver WHERE `name`='' AND `size`<1 ORDER BY RAND() DESC LIMIT 50;";
+            $SQL = "SELECT * FROM $this->tablename_resolver WHERE `name`='' AND `size`<1 ORDER BY RAND() DESC LIMIT 25;";
             if ($res = $this->db->query($SQL) ){
                 $unknow_announces = [];
                 while ($row = $res->fetch_assoc()) $unknow_announces[]=$row;
@@ -146,11 +146,13 @@ class Resolver
             //print_r($result_code);
 
             if ($result_code === 2) {
-                Log::getInstance()->addWarning(__METHOD__ . " $info_hash_hex - Oops ... it happens. Can not get the information. Aborting (timeout).");
+                Log::getInstance()->addInfo(__METHOD__ . " $info_hash_hex - Oops ... it happens. Can not get the information. Aborting (timeout).");
                 return $result;
             } elseif ($result_code !== 0) {
                 $msg = 'REQUIRE INSTALLED  /usr/ports/net-p2p/libtorrent-rasterbar-python ???';
-                throw new Exception(__METHOD__ . " exec($command) " . " result_lines: ". json_encode($result_lines) ." result_code: $result_code" . $msg );
+                //throw new Exception(__METHOD__ . " exec($command) " . " result_lines: ". json_encode($result_lines) ." result_code: $result_code" . $msg );
+                Log::getInstance()->addWarning(__METHOD__ . " exec($command) " . " result_lines: ". json_encode($result_lines) ." result_code: $result_code" . $msg);
+                return $result;
             }
 
             // Success result_code(0)
@@ -166,7 +168,7 @@ class Resolver
             }
 
             if (defined('LOG_LEVEL') && LOG_LEVEL<=Log::INFO){
-                $msg = __METHOD__ . " $info_hash_hex - ";
+                $msg = __METHOD__ . " $info_hash_hex -";
                 if (!empty($result['name'])) $msg .= ' name:'.$result['name'];
                 if (!empty($result['size'])) $msg .= ' size:'.$result['size'];
                 if (!empty($result['comment'])) $msg .= ' comment:'.$result['comment'];
