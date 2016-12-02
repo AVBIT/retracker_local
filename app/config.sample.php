@@ -4,7 +4,7 @@
  *                              CONFIG
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 02.03.2016. Last modified on 15.11.2016
+ * Created on 02.03.2016. Last modified on 02.12.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -27,6 +27,7 @@ define('SELF',      substr(dirname(__FILE__),0,-3));
 define('DIR_VAR', 	SELF."var".DS);
 define('DIR_CACHE', DIR_VAR."cache".DS);
 define('DIR_LOG',   DIR_VAR."log".DS);
+define('DIR_TMP',   DIR_VAR."tmp".DS);
 //define('DIR_SESSION', DIR_VAR."session".DS);
 
 //LOG SETTINGS

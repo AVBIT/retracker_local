@@ -16,7 +16,7 @@
 require_once  '../autoload.php';
 
 $time_start = microtime(true);
-$semafor_file = DIR_CACHE . "cron_job_isrun.semafor";
+$semafor_file = DIR_TMP . "cron_job_isrun.semafor";
 
 if (file_exists($semafor_file)) {
     $diff = time() - filemtime($semafor_file);
@@ -36,7 +36,7 @@ Announce::getInstance()->SaveAllToHistory();        // Save(update) resolved ann
 
 
 
-if (defined('LOG_LEVEL') && LOG_LEVEL==Log::TRACE){
+if (defined('LOG_LEVEL') && LOG_LEVEL==Log::INFO){
     $msg = __METHOD__ . sprintf("CRONJOB: EXECUTIONTIME: %.5F sec.", microtime(true) - $time_start);
     Log::getInstance()->addInfo($msg);
 }
