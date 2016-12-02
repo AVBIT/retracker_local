@@ -4,7 +4,7 @@
  *                              CRON JOB
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.10.2016. Last modified on 01.12.2016
+ * Created on 27.10.2016. Last modified on 02.12.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -20,7 +20,7 @@ $semafor_file = DIR_TMP . "cron_job_isrun.semafor";
 
 if (file_exists($semafor_file)) {
     $diff = time() - filemtime($semafor_file);
-    if ($diff < 1200) {
+    if ($diff < 1800) {
         Log::getInstance()->addWarning('CRONJOB: It is not possible to process the cron job as the previous job is still running!');
         exit;
     }
@@ -36,7 +36,7 @@ Announce::getInstance()->SaveAllToHistory();        // Save(update) resolved ann
 
 
 
-if (defined('LOG_LEVEL') && LOG_LEVEL==Log::INFO){
+if (defined('LOG_LEVEL') && LOG_LEVEL<=Log::INFO){
     $msg = __METHOD__ . sprintf("CRONJOB: EXECUTIONTIME: %.5F sec.", microtime(true) - $time_start);
     Log::getInstance()->addInfo($msg);
 }
