@@ -9,7 +9,7 @@
  * Usage: $info = Resolver::getInstance()->getInfoByInfoHashHex($info_hash_hex);
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 23.11.2016. Last modified on 01.12.2016
+ * Created on 23.11.2016. Last modified on 02.12.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -19,6 +19,7 @@
 
 class Resolver
 {
+    //public $threads = 1;    // multithreading (number of resolver threads)
 
     private static $_instance; // The single instance
 
@@ -50,6 +51,10 @@ class Resolver
         //print "__destruct(): " . __CLASS__ . ".class.php\n";
     }
 
+    public function run(){
+        // multithreading
+    }
+
     public function resolveAllAnnounces(){
         try {
             $SQL = "SELECT * FROM $this->tablename_resolver WHERE `name`='' AND `size`<1 ORDER BY RAND() DESC LIMIT 25;";
@@ -59,7 +64,7 @@ class Resolver
                 $res->close();
 
                 foreach ($unknow_announces as $row){
-                    $info_hash_hex = isset($row['name']) ? $row['info_hash_hex'] : '';
+                    $info_hash_hex = isset($row['info_hash_hex']) ? $row['info_hash_hex'] : '';
                     $update_time = isset($row['update_time']) ? $row['update_time'] : 0;
                     $result = $this->getInfoByInfoHashHex($info_hash_hex); // IMPORTANT!!! The operation can take a long time!
                     if (!empty($result)){
@@ -119,6 +124,17 @@ class Resolver
                 $res->close();
             } else {
                 throw new Exception(__METHOD__ . PHP_EOL . $SQL . PHP_EOL. $this->db->error );
+            }
+
+            if (!empty($result)) {
+                if (defined('LOG_LEVEL') && LOG_LEVEL<=Log::INFO){
+                    $msg = __METHOD__ . " FOUND: $info_hash_hex -";
+                    if (!empty($result['name'])) $msg .= ' name:'.$result['name'];
+                    if (!empty($result['size'])) $msg .= ' size:'.$result['size'];
+                    if (!empty($result['comment'])) $msg .= ' comment:'.$result['comment'];
+                    Log::getInstance()->addDebug($msg);
+                }
+                return $result;
             }
 
         } catch (Throwable $t) {
