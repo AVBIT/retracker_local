@@ -39,6 +39,7 @@ class Resolver
     public function __construct()
     {
         $this->tablename_resolver = 'announce_resolver';
+        $this->tablename_unresolved = 'announce_unresolved';
         $this->tablename_history = 'history';
 
         $this->db = Database::getInstance();
@@ -57,15 +58,36 @@ class Resolver
 
     public function resolveAllAnnounces(){
         try {
-            $SQL = "SELECT * FROM $this->tablename_resolver WHERE `name`='' AND `size`<1 ORDER BY RAND() DESC LIMIT 25;";
+            if (mt_rand(1, 1000) <= 1) {
+                $SQL = "DELETE FROM $this->tablename_unresolved WHERE update_time < 86400*30;";
+                if (!$this->db->query($SQL) ){
+                    throw new Exception(__METHOD__ . PHP_EOL . $SQL . PHP_EOL. $this->db->error );
+                }
+            }
+
+            //$SQL = "SELECT * FROM $this->tablename_resolver WHERE `name`='' AND `size`<1 ORDER BY RAND() DESC LIMIT 40;";
+            $SQL = "SELECT
+                      $this->tablename_resolver.info_hash_hex,
+                      $this->tablename_resolver.update_time,
+                      $this->tablename_unresolved.attempts
+                    FROM $this->tablename_resolver
+                    LEFT OUTER JOIN $this->tablename_unresolved ON $this->tablename_resolver.info_hash_hex = $this->tablename_unresolved.info_hash_hex
+                    WHERE `name`='' AND `size`<1 AND (ISNULL(attempts))
+                    ORDER BY attempts ASC
+                    LIMIT 30;
+                  ";
             if ($res = $this->db->query($SQL) ){
                 $unknow_announces = [];
                 while ($row = $res->fetch_assoc()) $unknow_announces[]=$row;
                 $res->close();
 
                 foreach ($unknow_announces as $row){
-                    $info_hash_hex = isset($row['info_hash_hex']) ? $row['info_hash_hex'] : '';
-                    $update_time = isset($row['update_time']) ? $row['update_time'] : 0;
+                    $info_hash_hex = isset($row['info_hash_hex']) && !empty($row['info_hash_hex']) ? $row['info_hash_hex'] : '';
+                    $update_time = isset($row['update_time']) && !empty($row['update_time']) ? $row['update_time'] : 0;
+                    $attempts = isset($row['attempts']) && !empty($row['attempts']) ? $row['attempts']+1 : '';
+
+                    Log::getInstance()->addInfo(__METHOD__ . " $info_hash_hex - ATTEMPT SEARCH " . $attempts);
+
                     $result = $this->getInfoByInfoHashHex($info_hash_hex); // IMPORTANT!!! The operation can take a long time!
                     if (!empty($result)){
                         $name = isset($result['name']) && !empty($result['name']) ? $result['name'] : '';
@@ -85,7 +107,7 @@ class Resolver
                 }
 
             } else {
-                throw new Exception(__METHOD__ . PHP_EOL . $SQL . PHP_EOL. $this->db->error );
+                throw new Exception(__METHOD__ . PHP_EOL . $SQL . PHP_EOL . $this->db->error . PHP_EOL );
             }
 
         } catch (Throwable $t) {
@@ -102,39 +124,39 @@ class Resolver
         if (empty($info_hash_hex)) return $result;
         $info_hash_hex_sql = $this->db->real_escape_string($info_hash_hex);
 
-        $result = $this->getStorageInfo($info_hash_hex_sql);
+        $result = $this->findInfoInternal($info_hash_hex_sql);
         if (!empty($result)) return $result;
 
-        $result = $this->findInfo($info_hash_hex);
+        $result = $this->findInfoExternal($info_hash_hex);
         if (!empty($result)) return $result;
 
         return $result;
     }
 
-    private function getStorageInfo($info_hash_hex = null){
+    private function findInfoInternal($info_hash_hex = null){
 
         $result = [];
 
         try {
-            $SQL = "SELECT * FROM $this->tablename_history WHERE info_hash_hex='$info_hash_hex' AND `name`!='' AND `size`>0;";
+            $SQL = "SELECT * FROM $this->tablename_history WHERE info_hash_hex='$info_hash_hex';"; // info_hash_hex - primary key!
             if ($res = $this->db->query($SQL) ){
-                while ($row = $res->fetch_assoc()){
-                    $result[] = $row;
-                }
+                $result = $res->fetch_assoc();
                 $res->close();
             } else {
-                throw new Exception(__METHOD__ . PHP_EOL . $SQL . PHP_EOL. $this->db->error );
+                throw new Exception(__METHOD__ . PHP_EOL . $SQL . PHP_EOL. $this->db->error . PHP_EOL );
             }
 
-            if (!empty($result)) {
-                if (defined('LOG_LEVEL') && LOG_LEVEL<=Log::INFO){
-                    $msg = __METHOD__ . " FOUND: $info_hash_hex -";
+            if (defined('LOG_LEVEL')){
+                if (!empty($result)){
+                    $msg = __METHOD__ . " $info_hash_hex - FOUND IN HISTORY";
                     if (!empty($result['name'])) $msg .= ' name:'.$result['name'];
                     if (!empty($result['size'])) $msg .= ' size:'.$result['size'];
                     if (!empty($result['comment'])) $msg .= ' comment:'.$result['comment'];
-                    Log::getInstance()->addDebug($msg);
+                    $msg = mb_convert_encoding($msg, 'UTF-8', 'CP1251');
+                    Log::getInstance()->addInfo($msg);
+                } else {
+                    Log::getInstance()->addDebug(__METHOD__ . " $info_hash_hex - NOT FOUND IN HISTORY");
                 }
-                return $result;
             }
 
         } catch (Throwable $t) {
@@ -148,9 +170,14 @@ class Resolver
         return $result;
     }
 
-    private function findInfo($info_hash_hex = null, $tracker = null){
+    private function findInfoExternal($info_hash_hex = null, $tracker = null){
         $result = [];
         if (empty($info_hash_hex)) return $result;
+        //if ($this->getAttempts($info_hash_hex) >= 2){
+        //    Log::getInstance()->addInfo(__METHOD__ . " $info_hash_hex - Attempts to obtain information been exhausted.");
+        //    return $result;
+        //}
+
         $tracker = empty($tracker) ? 'http://retracker.local/announce' : urlencode($tracker);
 
         $command = "python magnetinfo.py -m 'magnet:?xt=urn:btih:$info_hash_hex&tr=$tracker'";
@@ -162,7 +189,8 @@ class Resolver
             //print_r($result_code);
 
             if ($result_code === 2) {
-                Log::getInstance()->addInfo(__METHOD__ . " $info_hash_hex - Oops ... it happens. Can not get the information. Aborting (timeout).");
+                Log::getInstance()->addInfo(__METHOD__ . " $info_hash_hex - UNRESOLVED Oops ... it happens. Can not get the information. Aborting (timeout).");
+                $this->markAsUnresolved($info_hash_hex);
                 return $result;
             } elseif ($result_code !== 0) {
                 $msg = 'REQUIRE INSTALLED  /usr/ports/net-p2p/libtorrent-rasterbar-python ???';
@@ -184,7 +212,7 @@ class Resolver
             }
 
             if (defined('LOG_LEVEL') && LOG_LEVEL<=Log::INFO){
-                $msg = __METHOD__ . " $info_hash_hex -";
+                $msg = __METHOD__ . " $info_hash_hex - RESOLVED";
                 if (!empty($result['name'])) $msg .= ' name:'.$result['name'];
                 if (!empty($result['size'])) $msg .= ' size:'.$result['size'];
                 if (!empty($result['comment'])) $msg .= ' comment:'.$result['comment'];
@@ -206,6 +234,32 @@ class Resolver
         }
 
         return $result;
+    }
+
+    private function markAsUnresolved ($info_hash_hex = null){
+        try {
+            $SQL = "INSERT DELAYED INTO $this->tablename_unresolved
+				  (info_hash_hex, attempts, update_time)
+			    VALUES
+				  ('$info_hash_hex', 1, UNIX_TIMESTAMP())
+			    ON DUPLICATE KEY UPDATE 
+			        attempts = attempts + 1,
+			        update_time = UNIX_TIMESTAMP();
+			";
+
+            if ($this->db->query($SQL) === false){
+                throw new Exception(__METHOD__ . PHP_EOL . $SQL . PHP_EOL. $this->db->error . PHP_EOL );
+            }
+
+            Log::getInstance()->addDebug(__METHOD__ . ' ' . $info_hash_hex);
+
+        } catch (Throwable $t) {
+            // Executed only in PHP 7, will not match in PHP 5.x
+            Log::getInstance()->addError($t->getMessage());
+        } catch (Exception $e) {
+            // Executed only in PHP 5.x, will not be reached in PHP 7
+            Log::getInstance()->addError($e->getMessage());
+        }
     }
 
     public function detect_encoding($string) {
