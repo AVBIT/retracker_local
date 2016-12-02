@@ -5,7 +5,7 @@ Target Server Version : 50713
 File Encoding         : 65001
 
 Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
-Created on 02.03.2016. Last modified on 23.11.2016
+Created on 02.03.2016. Last modified on 02.12.2016
 */
 
 
@@ -64,6 +64,17 @@ CREATE TABLE `announce_resolver` (
   `update_time` int(11) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`info_hash_hex`)
 ) ENGINE=MEMORY DEFAULT CHARSET=cp1251;
+
+-- ----------------------------
+-- Table structure for `announce_unresolved` (for  announce_ng.php && GUI && SCRAPE-action)
+-- ----------------------------
+DROP TABLE IF EXISTS `announce_unresolved`;
+CREATE TABLE `announce_unresolved` (
+  `info_hash_hex` char(40) NOT NULL DEFAULT '',
+  `attempts` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  `update_time` int(11) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`info_hash_hex`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 -- ----------------------------
 -- Table structure for `history` (for  announce_ng.php && GUI && SCRAPE-action)
