@@ -9,7 +9,7 @@
  * Usage: $info = Resolver::getInstance()->getInfoByInfoHashHex($info_hash_hex);
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 23.11.2016. Last modified on 02.12.2016
+ * Created on 23.11.2016. Last modified on 05.12.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -56,23 +56,66 @@ class Resolver
         // multithreading
     }
 
+    public function resolveAllKnown(){
+        try {
+            $SQL = "SELECT
+                      $this->tablename_resolver.info_hash_hex,
+                      $this->tablename_history.`name` AS history_name,
+                      $this->tablename_history.`size` AS history_size,
+                      $this->tablename_history.`comment` AS history_comment
+                  FROM $this->tablename_resolver
+                  LEFT OUTER JOIN $this->tablename_history ON $this->tablename_resolver.info_hash_hex = $this->tablename_history.info_hash_hex
+                  WHERE ($this->tablename_resolver.`name`='' AND $this->tablename_resolver.`size`<1) AND (NOT ISNULL($this->tablename_history.`name`) AND $this->tablename_history.`size`>0);
+                  ";
+            if ($res = $this->db->query($SQL) ){
+                $i=0;
+                while ($row = $res->fetch_assoc()) {
+                    $info_hash_hex = $row['info_hash_hex'];
+                    $history_name = $this->db->real_escape_string($row['history_name']);
+                    $history_size = (int)$row['history_size'];
+                    $history_comment = $this->db->real_escape_string($row['history_comment']);
+
+                    $subSQL = "UPDATE $this->tablename_resolver SET `name`='$history_name',`size`='$history_size',`comment`='$history_comment' WHERE info_hash_hex='$info_hash_hex';";
+                    if ($this->db->query($subSQL) === false){
+                        throw new Exception(__METHOD__ . PHP_EOL . $subSQL . PHP_EOL. $this->db->error . PHP_EOL );
+                    }
+                    //Log::getInstance()->addTrace(__METHOD__ . " affected_rows:" . $this->db->affected_rows);
+                    $i++;
+                }
+                $res->close();
+                Log::getInstance()->addInfo(__METHOD__ . " FOUND IN HISTORY AND RESOLVED - $i");
+            } else {
+                throw new Exception(__METHOD__ . PHP_EOL . $SQL . PHP_EOL. $this->db->error . PHP_EOL );
+            }
+
+        } catch (Throwable $t) {
+            // Executed only in PHP 7, will not match in PHP 5.x
+            Log::getInstance()->addError($t->getMessage());
+        } catch (Exception $e) {
+            // Executed only in PHP 5.x, will not be reached in PHP 7
+            Log::getInstance()->addError($e->getMessage());
+        }
+    }
+
     public function resolveAllAnnounces(){
+
+        $this->resolveAllKnown();
+        // resolve other
         try {
             if (mt_rand(1, 1000) <= 1) {
-                $SQL = "DELETE FROM $this->tablename_unresolved WHERE update_time < 86400*30;";
+                $SQL = "DELETE FROM $this->tablename_unresolved WHERE update_time < 86400*7;";
                 if (!$this->db->query($SQL) ){
                     throw new Exception(__METHOD__ . PHP_EOL . $SQL . PHP_EOL. $this->db->error );
                 }
             }
 
-            //$SQL = "SELECT * FROM $this->tablename_resolver WHERE `name`='' AND `size`<1 ORDER BY RAND() DESC LIMIT 40;";
             $SQL = "SELECT
                       $this->tablename_resolver.info_hash_hex,
                       $this->tablename_resolver.update_time,
                       $this->tablename_unresolved.attempts
                     FROM $this->tablename_resolver
                     LEFT OUTER JOIN $this->tablename_unresolved ON $this->tablename_resolver.info_hash_hex = $this->tablename_unresolved.info_hash_hex
-                    WHERE `name`='' AND `size`<1 AND (ISNULL(attempts))
+                    WHERE `name`='' AND `size`<1 AND (ISNULL(attempts) OR attempts < 3) 
                     ORDER BY attempts ASC
                     LIMIT 30;
                   ";
@@ -95,8 +138,8 @@ class Resolver
                         $comment = isset($result['comment']) && !empty($result['comment']) ? $result['comment'] : '';
 
                         if (!empty($name) && !empty($size)) {
-                            $name = $this->db->real_escape_string($result['name']);
-                            $comment = $this->db->real_escape_string($result['comment']);
+                            $name = $this->db->real_escape_string($name);
+                            $comment = $this->db->real_escape_string($comment);
                             $SQL2 = "UPDATE $this->tablename_resolver SET `name`='$name', `size`='$size', `comment`='$comment' WHERE info_hash_hex='$info_hash_hex';";
                             if ($this->db->query($SQL2) === false){
                                 throw new Exception(__METHOD__ . PHP_EOL . $SQL2 . PHP_EOL. $this->db->error );
@@ -155,7 +198,7 @@ class Resolver
                     $msg = mb_convert_encoding($msg, 'UTF-8', 'CP1251');
                     Log::getInstance()->addInfo($msg);
                 } else {
-                    Log::getInstance()->addDebug(__METHOD__ . " $info_hash_hex - NOT FOUND IN HISTORY");
+                    Log::getInstance()->addInfo(__METHOD__ . " $info_hash_hex - NOT FOUND IN HISTORY");
                 }
             }
 
@@ -173,14 +216,18 @@ class Resolver
     private function findInfoExternal($info_hash_hex = null, $tracker = null){
         $result = [];
         if (empty($info_hash_hex)) return $result;
-        //if ($this->getAttempts($info_hash_hex) >= 2){
-        //    Log::getInstance()->addInfo(__METHOD__ . " $info_hash_hex - Attempts to obtain information been exhausted.");
-        //    return $result;
-        //}
 
-        $tracker = empty($tracker) ? 'http://retracker.local/announce' : urlencode($tracker);
+        $trackers[] = empty($tracker) ? 'http://retracker.local/announce' : $tracker;
+        if (defined('OPEN_TRACKERS')){
+            $arr = preg_split("/[\s,;|]+/", OPEN_TRACKERS);
+            $trackers = array_merge($trackers, $arr);
+        }
 
-        $command = "python magnetinfo.py -m 'magnet:?xt=urn:btih:$info_hash_hex&tr=$tracker'";
+        $tracker_str='';
+        foreach ($trackers as $tracker) $tracker_str .= "&tr=$tracker";
+
+        $command = "python magnetinfo.py -m 'magnet:?xt=urn:btih:" . $info_hash_hex . $tracker_str . "'";
+        //Log::getInstance()->addTrace($command);
 
         try {
             // Code that may throw an Exception or Error.
@@ -194,7 +241,6 @@ class Resolver
                 return $result;
             } elseif ($result_code !== 0) {
                 $msg = 'REQUIRE INSTALLED  /usr/ports/net-p2p/libtorrent-rasterbar-python ???';
-                //throw new Exception(__METHOD__ . " exec($command) " . " result_lines: ". json_encode($result_lines) ." result_code: $result_code" . $msg );
                 Log::getInstance()->addWarning(__METHOD__ . " exec($command) " . " result_lines: ". json_encode($result_lines) ." result_code: $result_code" . $msg);
                 return $result;
             }
@@ -251,7 +297,7 @@ class Resolver
                 throw new Exception(__METHOD__ . PHP_EOL . $SQL . PHP_EOL. $this->db->error . PHP_EOL );
             }
 
-            Log::getInstance()->addDebug(__METHOD__ . ' ' . $info_hash_hex);
+            Log::getInstance()->addInfo(__METHOD__ . ' ' . $info_hash_hex);
 
         } catch (Throwable $t) {
             // Executed only in PHP 7, will not match in PHP 5.x
