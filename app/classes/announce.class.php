@@ -8,7 +8,7 @@
  * Usage: $announce = Announce::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.03.2016. Last modified on 30.11.2016
+ * Created on 27.03.2016. Last modified on 05.12.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -137,7 +137,7 @@ class Announce {
 
     }
 
-    public function getHumanReadable($page = 1, $row_in_page = 20){
+    public function getHumanReadable($page = 1, $row_in_page = 50){
 
         if ((int)$row_in_page < 10) $row_in_page = 10;
         if ((int)$page < 1) $page = 1;
@@ -181,7 +181,7 @@ class Announce {
         $result['page_num'] = (int)$page;
         $result['pages'] = floor(count($arr) / (int)$row_in_page)+1;
         if ($result['page_num']>$result['pages']) $this->getHumanReadable(1,$row_in_page);
-        $result['result'] = array_slice($arr, $offset, $offset+$row_in_page);
+        $result['result'] = array_slice($arr, $offset, $row_in_page);
 
         // Save to cache
         if (defined('CACHE')) @Cache::getInstance()->set( $cache_key , $result, 10);
@@ -201,13 +201,23 @@ class Announce {
         $result['count_resolved_info_hash'] = 0;
         $result['count_unknoun_info_hash'] = 0;
 
+        $result['request_per_second']['max'] = 0;
+        $result['request_per_second']['last'] = 0;
+        $result['request_per_second']['avg'] = 0;
 
-        $SQL = "SELECT seeders, leechers, `name`, `size` FROM announce_resolver;";
+        $request = [];
+
+        $SQL = "SELECT seeders, leechers, `name`, UNIX_TIMESTAMP()-update_time as diff_time FROM announce_resolver;";
 
         if ($res = $this->db->query($SQL) ) {
             while ($row = $res->fetch_assoc()) {
                 $result['count_seeders'] += $row['seeders'];
                 $result['count_leechers'] += $row['leechers'];
+
+                if ($row['diff_time']>0 && $row['diff_time']<=60){
+                    if (!isset($request[$row['diff_time']])) $request[$row['diff_time']] = 0; // init array key
+                    $request[$row['diff_time']]++;
+                }
 
                 $result['count_info_hash_announce']++;
                 if (!empty($row['name'])){
@@ -220,6 +230,12 @@ class Announce {
         }
         $result['count_peers'] = $result['count_seeders'] + $result['count_leechers'];
         $result['count_info_hash_history'] = History::getInstance()->getTableRecordsCount();
+
+        if (!empty($request)){
+            $result['request_per_second']['max'] = max($request);
+            $result['request_per_second']['last'] = isset($request[1])? $request[1] : 0;
+            $result['request_per_second']['avg'] = ceil(array_sum($request)/count($request));
+        }
 
         return $result;
     }
