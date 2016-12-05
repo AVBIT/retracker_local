@@ -4,7 +4,7 @@
  *                              CONFIG
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 02.03.2016. Last modified on 02.12.2016
+ * Created on 02.03.2016. Last modified on 05.12.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -49,6 +49,13 @@ define('LANGUAGE', serialize(array(
 )));
 
 
+// Define access
+define('ACCESS_TRUSTED_NETWORK', '127.0.0.1, 10.0.0.0/8');   //  separated string [\s,;|]
+define('ACCESS_ADMIN', '127.0.0.1, 10.11.1.0/24'); // separated string [\s,;|]
+
+define('OPEN_TRACKERS', 'udp://tracker.openbittorrent.com:80/announce, udp://tracker.opentrackr.org:1337/announce'); // separated string [\s,;|]
+
+
 // TRACKER CONFIG
 $tr_cfg = []; // array
 
@@ -56,7 +63,7 @@ $tr_cfg = []; // array
 $tr_cfg['run_gc_key'] = 'run_gc';
 
 $tr_cfg['announce_interval']  = 120;        // sec, min = 60
-$tr_cfg['peer_expire_factor'] = 2.5;        // min = 2; Consider a peer dead if it has not announced in a number of seconds equal
+$tr_cfg['peer_expire_factor'] = 3;        // min = 2; Consider a peer dead if it has not announced in a number of seconds equal
                                             //to this many times the calculated announce interval at the time of its last announcement
 $tr_cfg['numwant']            = 50;         // number of peers being sent to client
 $tr_cfg['ignore_reported_ip'] = true;       // Ignore IP reported by client
