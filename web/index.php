@@ -4,7 +4,7 @@
  *                       APPLICATION CONTROLLER
  * --------------------------------------------------------------------
  * Author V.Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 28.10.2016. Last modified on 22.11.2016
+ * Created on 28.10.2016. Last modified on 05.12.2016
  * --------------------------------------------------------------------
  */
 
@@ -71,7 +71,7 @@ if ($action == 'announces') {
             'page_title' => 'Magnet Flea market',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'announces' => Announce::getInstance()->getHumanReadable($page_num, 20),
+            'announces' => Announce::getInstance()->getHumanReadable($page_num, 50),
         )
     );
     exit;
@@ -85,7 +85,7 @@ if ($action == 'announces') {
             'page_title' => 'History of announcements',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'announces' => History::getInstance()->getHumanReadable($page_num, 20),
+            'announces' => History::getInstance()->getHumanReadable($page_num, 50),
         )
     );
     exit;
