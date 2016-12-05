@@ -8,7 +8,7 @@
  * Usage: $history = BitTorrent::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 10.11.2016. Last modified on 30.11.2016
+ * Created on 10.11.2016. Last modified on 05.12.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -165,6 +165,7 @@ class History {
             $size = is_numeric($size) ? (int)$size : 0;
             $update_time = !is_numeric($update_time) || empty($update_time) ? 'UNIX_TIMESTAMP()' : (int)$update_time;
 
+            /*
             $SQL = "INSERT DELAYED INTO $this->tablename
 				  (info_hash_hex, `name`, `size`, `comment`, reg_time, update_time)
 			    VALUES
@@ -174,6 +175,18 @@ class History {
 			        `size`= IF (`size`<$size,'$size',`size`),
 			        `comment`= IF (LENGTH(`comment`)<LENGTH('$comment'),'$comment',`comment`),
 			        `update_time`= IF (`update_time`<$update_time, $update_time, `update_time`);
+			";
+            */
+
+            $SQL = "INSERT DELAYED INTO $this->tablename
+				  (info_hash_hex, `name`, `size`, `comment`, reg_time, update_time)
+			    VALUES
+				  ('$info_hash_hex', '$name', " . ($size > 0 ? $size : 0) . ", '$comment', UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
+			    ON DUPLICATE KEY UPDATE 
+			        `name`= '$name',
+			        `size`= '$size',
+			        `comment`= '$comment',
+			        `update_time`= $update_time;
 			";
 
             if ($this->db->query($SQL) === false){
@@ -190,7 +203,7 @@ class History {
 
     }
 
-    public function getHumanReadable($page = 1, $row_in_page = 20){
+    public function getHumanReadable($page = 1, $row_in_page = 50){
 
         $result['page_num'] = (int)$page;
         $result['pages'] = ceil($this->getTableRecordsCount() / (int)$row_in_page)-1;
