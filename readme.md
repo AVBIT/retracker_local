@@ -28,7 +28,7 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 ```
 */5    *       *       *       *       root    cd /usr/www/retracker_local/app/bin/ && php cron_job.php > /dev/null 2>&1
 ```
-8. Install 'python' and 'libtorrent-rasterbar-python'. It is not necessary, but desirable, because in practice many network announcements do not have the name and size and they will not be displayed on the web site. (Example for FreeBSD):
+8. Install 'python' and 'libtorrent-rasterbar-python' (it should install the packages:  /usr/ports/lang/python, /usr/ports/net-p2p/libtorrent, /usr/ports/net-p2p/libtorrent-rasterbar, /usr/ports/net-p2p/libtorrent-rasterbar-python). It is not necessary, but desirable, because in practice many network announcements do not have the name and size and they will not be displayed on the web site. (Example for FreeBSD):
 ```
 # cd /usr/ports/lang/python 
 # make install clean

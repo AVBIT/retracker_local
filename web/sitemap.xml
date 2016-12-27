@@ -18,7 +18,7 @@ http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd'>
         <changefreq>daily</changefreq>
     </url>
     <url>
-        <loc>http://retracker.local/faq</loc>
+        <loc>http://retracker.local/about</loc>
         <changefreq>weekly</changefreq>
     </url>
 </urlset>

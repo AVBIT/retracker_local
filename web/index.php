@@ -4,7 +4,7 @@
  *                       APPLICATION CONTROLLER
  * --------------------------------------------------------------------
  * Author V.Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 28.10.2016. Last modified on 05.12.2016
+ * Created on 28.10.2016. Last modified on 27.12.2016
  * --------------------------------------------------------------------
  */
 
@@ -122,22 +122,22 @@ if ($action == 'announces') {
     );
     exit;
 
-} elseif ($action == 'profile' && Account::getInstance()->isAuth()) {
-
-    echo $twig->render('profile.twig', array(
-            'base_path' => $base_path,
-            'page_title' => 'Profile',
-            'navAction' => $action,
-            'account' => Account::getInstance()->get(),
-        )
-    );
-    exit;
-
 } elseif ($action == 'about') {
 
     echo $twig->render('about.twig', array(
             'base_path' => $base_path,
             'page_title' => 'FAQ',
+            'navAction' => $action,
+            'account' => Account::getInstance()->get(),
+        )
+    );
+    exit;
+/*
+} elseif ($action == 'profile' && Account::getInstance()->isAuth()) {
+
+    echo $twig->render('profile.twig', array(
+            'base_path' => $base_path,
+            'page_title' => 'Profile',
             'navAction' => $action,
             'account' => Account::getInstance()->get(),
         )
@@ -161,6 +161,7 @@ if ($action == 'announces') {
         )
     );
     exit;
+*/
 }
 
 

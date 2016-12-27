@@ -3,7 +3,7 @@
  *                              BASE TEMPLATE
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 28.10.2016. Last modified on 15.11.2016
+ * Created on 28.10.2016. Last modified on 27.12.2016
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -123,7 +123,7 @@
                                         <!-- Registered admin submenu -->
                                         <li {% if navAction == 'statistic' %} class='active' {% endif %} ><a href="{{ base_path }}/statistic"><span class="glyphicon glyphicon-stats"></span> {% trans "Statistic" %} </a></li>
                                     {% endif %}
-
+                                    {#
                                     {% if account.is_auth == true %}
                                         <!-- Registered user submenu -->
                                         <li {% if navAction == 'profile' %} class='active' {% endif %} ><a href="{{ base_path }}/profile"><span class="glyphicon glyphicon-cog"></span> {% trans "Profile" %}, [ {{ account.local_ip }} ] </a></li>
@@ -136,6 +136,9 @@
                                             <li {% if navAction == 'about' %}class='active'{% endif %}><a href="{{ base_path }}/about"><span class="glyphicon glyphicon-info-sign"></span> {% trans "About" %} </a></li>
                                         </ul>
                                     </li>
+                                    #}
+                                    <li {% if navAction == 'about' %}class='active'{% endif %}><a href="{{ base_path }}/about"><span class="glyphicon glyphicon-info-sign"></span></a></li>
+
 
                                 </ul>
                             </div><!--/.nav-collapse -->
