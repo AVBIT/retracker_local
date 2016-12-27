@@ -12,7 +12,7 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 1. Create MySQL database 'retracker' and create tables (sql/schema.sql);
 ```
 # mysql -uroot -p your_password
-# CREATE DATABASE `retracker` CHARACTER SET utf8 COLLATE utf8_general_ci;
+# CREATE DATABASE `retracker` CHARACTER SET cp1251 COLLATE cp1251_general_ci;
 # use retracker;
 # \. /path/to/sql/schema.sql
 ```
@@ -26,7 +26,15 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 6. Create DNS name "retracker.local" (subscribers will be use URL: http://retracker.local/announce).
 7. Create cron job for run garbage collector. (add line in crontab file, example):
 ```
-*/5    *       *       *       *       root    cd /usr/www/retracker_local/app/ && php cron_job.php > /dev/null 2>&1
+*/5    *       *       *       *       root    cd /usr/www/retracker_local/app/bin/ && php cron_job.php > /dev/null 2>&1
+```
+8. Install 'python' and 'libtorrent-rasterbar-python' (it should install the packages:  /usr/ports/lang/python, /usr/ports/net-p2p/libtorrent, /usr/ports/net-p2p/libtorrent-rasterbar, /usr/ports/net-p2p/libtorrent-rasterbar-python). It is not necessary, but desirable, because in practice many network announcements do not have the name and size and they will not be displayed on the web site. (Example for FreeBSD):
+```
+# cd /usr/ports/lang/python 
+# make install clean
+...
+# cd /usr/ports/net-p2p/libtorrent-rasterbar-python
+# make install clean
 ```
 
 

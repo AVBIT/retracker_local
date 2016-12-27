@@ -1,0 +1,88 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: retracker.local\n"
+"Report-Msgid-Bugs-To: vmc@codegroove.net\n"
+"POT-Creation-Date: 2010-05-28 06:18-0500\n"
+"PO-Revision-Date: 2016-11-15 16:48+0200\n"
+"Language-Team: AVBIT <avbitinfo@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Last-Translator: AVBIT <avbitinfo@gmail.com>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: en\n"
+
+#, php-format
+msgid "Magnet Flea Market"
+msgstr ""
+
+msgid "Announces"
+msgstr ""
+
+msgid "History"
+msgstr ""
+
+msgid "Statistic"
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid "Profile"
+msgstr ""
+
+msgid "Sorry, page under construction!"
+msgstr ""
+
+msgid "Active bittorrent network announcements"
+msgstr ""
+
+msgid "There are no active bittorrent network announcements."
+msgstr ""
+
+msgid "History announcements"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Search results for"
+msgstr ""
+
+msgid "Your search nothing has been found."
+msgstr ""
+
+# Pagination
+msgid "Page"
+msgstr ""
+
+msgid "of"
+msgstr ""
+
+msgid "First page"
+msgstr ""
+
+msgid "Last page"
+msgstr ""
+
+# About the project
+msgid "About project"
+msgstr ""
+
+msgid "About the project [description]"
+msgstr "<p>The project uses the idea of ​​a local retracker (retracker.local) and based on the interception of announcements, that are sent bitttorent programs on the local network, forms Magnet-reference database.</p>"
+
+msgid "More about retracker.local"
+msgstr ""
+
+msgid "More about retracker.local [description]"
+msgstr "<p>Retracker - BitTorrent technology to optimize the exchange (bittorrent) traffic inside the local network. Retracker allows a direct connection by protocol bittorrent between subscribers of the same internet service provider (or several ISP have an agreement on the exchange of local traffic).</p><p><a href='https://ru.wikipedia.org/wiki/Ретрекер' target='_blank'>https://ru.wikipedia.org/wiki/Ретрекер</a></p>"
+
+msgid "More about Magnet URI scheme"
+msgstr ""
+
+msgid "More about Magnet URI scheme [description]"
+msgstr "<p><a href='https://en.wikipedia.org/wiki/Magnet_URI_scheme' target='_blank'>https://en.wikipedia.org/wiki/Magnet_URI_scheme</a></p>"

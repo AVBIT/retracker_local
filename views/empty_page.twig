@@ -1,0 +1,36 @@
+{#
+ * ----------------------------------------------------------------------------
+ *                              EMPTY PAGE TEMPLATE
+ * ----------------------------------------------------------------------------
+ * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
+ * Created on 28.10.2016. Last modified on 16.11.2016
+ * ----------------------------------------------------------------------------
+ * "THE BEER-WARE LICENSE":
+ * As long as you retain this notice you can do whatever you want with this stuff.
+ * If we meet some day, and you think this stuff is worth it, you can buy me a beer in return.
+ * ----------------------------------------------------------------------------
+#}
+
+{% extends "base.twig" %}
+
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-12 col-lg-10 col-lg-offset-1">
+
+            <br><br>
+            <p align="center" class="title"><b>{% trans "Empty page" %}</p>
+            <br>
+
+            <div style="text-align: center">
+                <img src="{{ base_path }}/assets/img/dev.png"/>
+                <p class="title warning"> {% trans "Sorry, page under construction!" %}</p>
+            </div>
+
+        </div>
+    </div>
+
+    <br><br><br><br>
+
+{% endblock %}

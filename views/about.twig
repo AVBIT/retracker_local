@@ -1,0 +1,47 @@
+{#
+ * ----------------------------------------------------------------------------
+ *                              ABOUT PAGE TEMPLATE
+ * ----------------------------------------------------------------------------
+ * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
+ * Created on 10.11.2016. Last modified on 16.11.2016
+ * ----------------------------------------------------------------------------
+ * "THE BEER-WARE LICENSE":
+ * As long as you retain this notice you can do whatever you want with this stuff.
+ * If we meet some day, and you think this stuff is worth it, you can buy me a beer in return.
+ * ----------------------------------------------------------------------------
+#}
+
+{% extends "base.twig" %}
+
+
+{% block content %}
+
+    <div class="row" xmlns="http://www.w3.org/1999/html">
+        <div class="col-md-12 col-lg-10 col-lg-offset-1">
+            <br>
+
+            <div class="faq">
+                <p class="title">{% trans "About project" %}</p>
+                <p class="body">{% trans "About the project [description]" %}</p>
+                <p>Source code: <a href="https://github.com/AVBIT/retracker_local/branches/all" target="_blank">https://github.com/AVBIT/retracker_local/branches/all</a></p>
+            </div>
+            <hr>
+
+            <div class="faq">
+                <p class="title">{% trans "More about retracker.local" %}</p>
+                <p class="body">{% trans "More about retracker.local [description]" %}</p>
+            </div>
+            <hr>
+
+            <div class="faq">
+                <p class="title">{% trans "More about Magnet URI scheme" %}</p>
+                <p class="body">{% trans "More about Magnet URI scheme [description]" %}</p>
+            </div>
+            <hr>
+
+        </div>
+    </div>
+
+    <br><br><br><br>
+
+{% endblock %}
