@@ -136,7 +136,7 @@ class Announce {
 
     }
 
-    public function getHumanReadable($page = 1, $row_in_page = 50){
+    public function getPageOfList($page = 1, $row_in_page = 50){
 
         if ((int)$row_in_page < 10) $row_in_page = 10;
         if ((int)$page < 1) $page = 1;
@@ -146,7 +146,6 @@ class Announce {
         $cache_key = 'announce_p'.$page;
         if (defined('CACHE')){
             $cache_result=@Cache::getInstance()->get( $cache_key );
-            //var_dump($cache_result);
             if (!empty($cache_result)) return $cache_result;
         }
 
@@ -187,6 +186,7 @@ class Announce {
 
         return $result;
     }
+
 
     public function getStatistic (){
 
@@ -239,6 +239,7 @@ class Announce {
         return $result;
     }
 
+    /*
     private function actionCompleted ($arr){
 
     }
@@ -248,6 +249,7 @@ class Announce {
     private function actionStopped ($arr){
 
     }
+    */
 
     public function getScrapeByInfoHash ($info_hash = null){
         $result = 'd5:filesd0:d8:completei0e10:incompletei0eeee'; // empty result

@@ -1,7 +1,6 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                            TWIG CUSTOM FILTERS
+ * TWIG CUSTOM FILTERS
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
  * Created on 07.11.2016. Last modified on 07.11.2016

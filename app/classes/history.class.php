@@ -7,7 +7,7 @@
  * Usage: $history = History::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 10.11.2016. Last modified on 05.12.2016
+ * Created on 10.11.2016. Last modified on 21.06.2017
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -202,23 +202,19 @@ class History {
 
     }
 
-    public function getHumanReadable($page = 1, $row_in_page = 50){
-
-        $result['page_num'] = (int)$page;
-        $result['pages'] = ceil($this->getTableRecordsCount() / (int)$row_in_page)-1;
-        $result['result'] = [];
-
-        if ((int)$row_in_page < 10) $row_in_page = 10;
-        if ((int)$page < 1) $page = 1;
-        $offset = (int)$page*$row_in_page-$row_in_page;
-
-        // Read from cache
-        $cache_key = 'history_p'.$page;
-        if (defined('CACHE')){
-            $cache_result=@Cache::getInstance()->get( $cache_key );
-            if (!empty($cache_result)) return $cache_result;
+    private function findAll($limit=100000, $offset=0, $orderBy=[]){
+        $result = [];
+        $limit = (int)$limit;
+        $offset = (int)$offset;
+        $allowed_key = array('name','size','comment','reg_time','update_time');
+        foreach ($orderBy as $key => $value){
+            if (!in_array($key, $allowed_key)) unset($orderBy[$key]);
         }
+        if (!$orderBy) $orderBy = array('update_time' => 'DESC'); // Set default orderBy
 
+        $arr = [];
+        foreach ($orderBy as $key => $value) $arr[] = "$key $value";
+        $orderBy = implode(',', $arr);
         $SQL = "SELECT
                   history.info_hash_hex,
                   history.`name`,
@@ -231,12 +227,11 @@ class History {
                 FROM
                   history
                 LEFT JOIN announce_resolver ON history.info_hash_hex = announce_resolver.info_hash_hex
-                ORDER BY update_time DESC LIMIT $row_in_page OFFSET $offset;
+                ORDER BY $orderBy LIMIT $limit OFFSET $offset;
         ";
-        //echo $SQL;
 
-        if ($res = $this->db->query($SQL) ){
-            while ($row = $res->fetch_assoc()){
+        if ($res = $this->db->query($SQL) ) {
+            while ($row = $res->fetch_assoc()) {
                 if (isset($row['name'])) $row['name'] = mb_convert_encoding($row['name'], "UTF-8", "CP1251");
 
                 // create URL and URN
@@ -246,30 +241,34 @@ class History {
                 if (isset($row['comment'])) {
                     $row['comment'] = Uri::makeURL($row['comment']);
                 }
-
-                $result['result'][] = $row;
+                $result[] = $row;
             }
             $res->close();
         }
-
-        // Save to cache
-        if (defined('CACHE')) @Cache::getInstance()->set( $cache_key , $result, 120);
 
         return $result;
     }
 
-    public function getTableRecordsCount(){
-        $result = 0;
-        $SQL = "SELECT table_name, table_rows
-                FROM INFORMATION_SCHEMA.TABLES
-                WHERE TABLE_SCHEMA = '".DB_NAME."' AND table_name='$this->tablename';";
-        //echo $SQL;
-        if ($res = $this->db->query($SQL) ){
-            while ($row = $res->fetch_assoc()){
-                $result = $row['table_rows'];
-            }
-            $res->close();
+    public function getPageOfList($page = 1, $row_in_page = 50, $orderBy=[]){
+
+        $result['page_num'] = (int)$page;
+        $result['pages'] = floor($this->db->getTableRecordsCount($this->tablename) / (int)$row_in_page) +1;
+
+        if ((int)$page < 1) $page = 1;
+        $offset = (int)$page*$row_in_page-$row_in_page;
+
+        // Read from cache
+        $cache_key = 'history_p'.$page.implode('',$orderBy);
+        if (defined('CACHE')){
+            $cache_result=@Cache::getInstance()->get( $cache_key );
+            if (!empty($cache_result)) return $cache_result;
         }
+
+        $result['result'] = $this->findAll($row_in_page,$offset,$orderBy);
+
+        // Save to cache
+        if (defined('CACHE')) @Cache::getInstance()->set( $cache_key , $result, 120);
+
         return $result;
     }
 

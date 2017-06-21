@@ -1,7 +1,6 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                              RETRACKER FUNCTIONS
+ * RETRACKER FUNCTIONS
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
  * Created on 24.10.2016. Last modified on 28.10.2016

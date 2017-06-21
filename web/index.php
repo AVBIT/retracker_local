@@ -3,7 +3,7 @@
  * APPLICATION CONTROLLER
  * --------------------------------------------------------------------
  * Author V.Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 28.10.2016. Last modified on 27.12.2016
+ * Created on 28.10.2016. Last modified on 21.06.2017
  * --------------------------------------------------------------------
  */
 
@@ -31,11 +31,8 @@ $params = explode("/", $params);
 
 define("BASE_PATH", $base_path);
 
-// TEST
-//echo  $base_path . '<br>'; echo  $action . '<br>';
 
-
-// Set language to Ukrainian
+// Set language
 //$language = "ru";  // locality should be determined here
 $language = LangDetect::getInstance()->getBestMatch();
 if (defined('LC_MESSAGES')) setlocale(LC_MESSAGES, $language); // Linux
@@ -58,6 +55,10 @@ if (false === function_exists('gettext')) {
 // Templating initialization
 $loader = new Twig_Loader_Filesystem(TEMPLATES);
 $twig = new Twig_Environment($loader,array('cache' => defined('TWIG_CACHE')?TWIG_CACHE:NULL,));
+
+// Create custom filter and functions for TWIG
+$twig->addGlobal('base_path', BASE_PATH);
+$twig->addGlobal('navAction', $action);
 $twig->addExtension(new Twig_Extensions_Extension_I18n());
 $twig->addFilter($filter_sizeHR);
 
@@ -66,11 +67,9 @@ if ($action == 'announces') {
     $page_num = (isset($_POST['page_num']) && is_numeric($_POST['page_num'])) ? (int)$_POST['page_num'] : 1;
 
     echo $twig->render('announces.twig', array(
-            'base_path' => $base_path,
             'page_title' => 'Magnet Flea market',
-            'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'announces' => Announce::getInstance()->getHumanReadable($page_num, 50),
+            'announces' => Announce::getInstance()->getPageOfList($page_num, 50),
         )
     );
     exit;
@@ -80,11 +79,9 @@ if ($action == 'announces') {
     $page_num = (isset($_POST['page_num']) && is_numeric($_POST['page_num'])) ? (int)$_POST['page_num'] : 1;
 
     echo $twig->render('history.twig', array(
-            'base_path' => $base_path,
             'page_title' => 'History of announcements',
-            'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            'announces' => History::getInstance()->getHumanReadable($page_num, 50),
+            'announces' => History::getInstance()->getPageOfList($page_num, 50),
         )
     );
     exit;
@@ -96,11 +93,8 @@ if ($action == 'announces') {
     if (isset($params[0]) && !empty($params[0])) $search_query = urldecode($params[0]);
 
     echo $twig->render('search.twig', array(
-            'base_path' => $base_path,
             'page_title' => 'Search',
-            'navAction' => $action,
             'account' => Account::getInstance()->get(),
-            //'search_query' => strip_tags($search_query),
             'announces' => History::getInstance()->Search($search_query, $page_num, 20),
         )
     );
@@ -108,14 +102,9 @@ if ($action == 'announces') {
 
 } elseif ($action == 'statistic' && Account::getInstance()->isAdm()) {
 
-    //var_dump(Announce::getInstance()->getStatistic());
-
     echo $twig->render('statistic.twig', array(
-            'base_path' => $base_path,
             'page_title' => 'Statistic',
-            'navAction' => $action,
             'account' => Account::getInstance()->get(),
-
             'statistic' => Announce::getInstance()->getStatistic(),
         )
     );
@@ -124,13 +113,12 @@ if ($action == 'announces') {
 } elseif ($action == 'about') {
 
     echo $twig->render('about.twig', array(
-            'base_path' => $base_path,
             'page_title' => 'FAQ',
-            'navAction' => $action,
-            'account' => Account::getInstance()->get(),
+            //'account' => Account::getInstance()->get(),
         )
     );
     exit;
+
 /*
 } elseif ($action == 'profile' && Account::getInstance()->isAuth()) {
 
