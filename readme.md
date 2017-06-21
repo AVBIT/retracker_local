@@ -27,13 +27,17 @@ or
 ```
 - Copy 'app/config.sample.php' to 'app/config.prod.php';
 - Configure the connection to the database (app/config.prod.php); 
+- Give write permissions for the web server to directories (these directories are not directly accessible via the web):
+  /usr/www/retracker_local/var/cache; 
+  /usr/www/retracker_local/var/log; 
+  /usr/www/retracker_local/var/tmp;
 - Configure a virtual host of web server to the directory "web"; 
 - Create DNS name "retracker.local" (subscribers will be use URL: http://retracker.local/announce).
 - Create cron job for run garbage collector. (add line in crontab file, example):
 ```
 */5    *       *       *       *       root    cd /usr/www/retracker_local/app/bin/ && php cron.php > /dev/null 2>&1
 ```
-8. Install 'python' and 'libtorrent-rasterbar-python' (it should install the packages:  /usr/ports/lang/python, /usr/ports/net-p2p/libtorrent, /usr/ports/net-p2p/libtorrent-rasterbar, /usr/ports/net-p2p/libtorrent-rasterbar-python). It is not necessary, but desirable, because in practice many network announcements do not have the name and size and they will not be displayed on the web site. (Example for FreeBSD):
+- Install 'python' and 'libtorrent-rasterbar-python' (it should install the packages:  /usr/ports/lang/python, /usr/ports/net-p2p/libtorrent, /usr/ports/net-p2p/libtorrent-rasterbar, /usr/ports/net-p2p/libtorrent-rasterbar-python). It is not necessary, but desirable, because in practice many network announcements do not have the name and size and they will not be displayed on the web site. (Example for FreeBSD):
 ```
 # cd /usr/ports/lang/python 
 # make install clean
