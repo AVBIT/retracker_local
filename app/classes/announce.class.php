@@ -178,7 +178,7 @@ class Announce {
 
         $result['page_num'] = (int)$page;
         $result['pages'] = floor(count($arr) / (int)$row_in_page)+1;
-        if ($result['page_num']>$result['pages']) $this->getHumanReadable(1,$row_in_page);
+        if ($result['page_num']>$result['pages']) $this->getPageOfList(1,$row_in_page);
         $result['result'] = array_slice($arr, $offset, $row_in_page);
 
         // Save to cache
@@ -228,7 +228,7 @@ class Announce {
             $res->close();
         }
         $result['count_peers'] = $result['count_seeders'] + $result['count_leechers'];
-        $result['count_info_hash_history'] = History::getInstance()->getTableRecordsCount();
+        $result['count_info_hash_history'] = $this->db->getTableRecordsCount(History::getTableName());
 
         if (!empty($request)){
             $result['request_per_second']['max'] = max($request);

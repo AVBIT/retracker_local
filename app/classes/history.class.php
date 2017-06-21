@@ -19,6 +19,7 @@
 class History {
 
     private static $_instance; // The single instance
+    private static $tablename = 'history';
 
     /**
     * Get an instance of the class
@@ -33,15 +34,16 @@ class History {
     }
 
     public function __construct() {
-
-        $this->tablename = 'history';
         $this->db = Database::getInstance();
-
         //print "__construct(): " . __CLASS__ . ".class.php\n";
     }
 
     function __destruct() {
         //print "__destruct(): " . __CLASS__ . ".class.php\n";
+    }
+
+    public static function getTableName(){
+        return self::$tablename;
     }
 
     public function Search($search_query, $page = 1, $row_in_page = 20) {
@@ -252,7 +254,7 @@ class History {
     public function getPageOfList($page = 1, $row_in_page = 50, $orderBy=[]){
 
         $result['page_num'] = (int)$page;
-        $result['pages'] = floor($this->db->getTableRecordsCount($this->tablename) / (int)$row_in_page) +1;
+        $result['pages'] = floor($this->db->getTableRecordsCount(History::getTableName()) / (int)$row_in_page) +1;
 
         if ((int)$page < 1) $page = 1;
         $offset = (int)$page*$row_in_page-$row_in_page;

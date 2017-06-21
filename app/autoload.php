@@ -1,10 +1,9 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                          AUTOLOAD APPLICATION
+ * AUTOLOAD APPLICATION
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 21.10.2016. Last modified on 24.11.2016
+ * Created on 21.10.2016. Last modified on 21.06.2017
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -14,8 +13,8 @@
 
 
 // Include config
-if (isset($_SERVER['REMOTE_ADDR']) && ($_SERVER['REMOTE_ADDR']=='::1' || $_SERVER['REMOTE_ADDR']=='127.0.0.1') && file_exists(__DIR__.'/config.local.php') ){
-    require_once 'config.dev.php'; // may be local config (for )
+if (isset($_SERVER['REMOTE_ADDR']) && ($_SERVER['REMOTE_ADDR']=='::1' || $_SERVER['REMOTE_ADDR']=='127.0.0.1') && file_exists(__DIR__.'/config.dev.php') ){
+    require_once 'config.dev.php'; // may be local config (for development)
 } else {
     require_once 'config.prod.php';
 }
@@ -29,7 +28,7 @@ spl_autoload_register(function ($class) {
 
 // Register my functions
 require_once __DIR__ . '/functions/retracker.func.php';
-require_once __DIR__ . '/functions/twigfilters.func.php';
+require_once __DIR__ . '/functions/twig.func.php';
 
 
 // Register other (vendor) classes

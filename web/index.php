@@ -54,7 +54,7 @@ if (false === function_exists('gettext')) {
 
 // Templating initialization
 $loader = new Twig_Loader_Filesystem(TEMPLATES);
-$twig = new Twig_Environment($loader,array('cache' => defined('TWIG_CACHE')?TWIG_CACHE:NULL,));
+$twig = new Twig_Environment($loader,array('cache' => defined('TWIG_CACHE')?TWIG_CACHE:false,));
 
 // Create custom filter and functions for TWIG
 $twig->addGlobal('base_path', BASE_PATH);
@@ -62,10 +62,9 @@ $twig->addGlobal('navAction', $action);
 $twig->addExtension(new Twig_Extensions_Extension_I18n());
 $twig->addFilter($filter_sizeHR);
 
+
 if ($action == 'announces') {
-
     $page_num = (isset($_POST['page_num']) && is_numeric($_POST['page_num'])) ? (int)$_POST['page_num'] : 1;
-
     echo $twig->render('announces.twig', array(
             'page_title' => 'Magnet Flea market',
             'account' => Account::getInstance()->get(),
@@ -75,9 +74,7 @@ if ($action == 'announces') {
     exit;
 
 } elseif ($action == 'history' && Account::getInstance()->isAuth()) {
-
     $page_num = (isset($_POST['page_num']) && is_numeric($_POST['page_num'])) ? (int)$_POST['page_num'] : 1;
-
     echo $twig->render('history.twig', array(
             'page_title' => 'History of announcements',
             'account' => Account::getInstance()->get(),
@@ -87,11 +84,9 @@ if ($action == 'announces') {
     exit;
 
 } elseif ($action == 'search' && Account::getInstance()->isAuth()) {
-
     $page_num = (isset($_POST['page_num']) && is_numeric($_POST['page_num'])) ? (int)$_POST['page_num'] : 1;
     $search_query = isset($_POST['search_query']) ? $_POST['search_query'] : '';
     if (isset($params[0]) && !empty($params[0])) $search_query = urldecode($params[0]);
-
     echo $twig->render('search.twig', array(
             'page_title' => 'Search',
             'account' => Account::getInstance()->get(),
@@ -101,7 +96,6 @@ if ($action == 'announces') {
     exit;
 
 } elseif ($action == 'statistic' && Account::getInstance()->isAdm()) {
-
     echo $twig->render('statistic.twig', array(
             'page_title' => 'Statistic',
             'account' => Account::getInstance()->get(),
@@ -111,14 +105,12 @@ if ($action == 'announces') {
     exit;
 
 } elseif ($action == 'about') {
-
     echo $twig->render('about.twig', array(
             'page_title' => 'FAQ',
-            //'account' => Account::getInstance()->get(),
+            'account' => Account::getInstance()->get(),
         )
     );
     exit;
-
 /*
 } elseif ($action == 'profile' && Account::getInstance()->isAuth()) {
 
