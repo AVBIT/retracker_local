@@ -1,7 +1,6 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                              Resolver CLASS
+ * Resolver CLASS
  * ----------------------------------------------------------------------------
  * Resolver class using Singleton pattern.
  * Only one instance of the class will be made, this requires less memory.

@@ -1,7 +1,6 @@
 <?php
 /**
- * --------------------------------------------------------------------
- *                       APPLICATION CONTROLLER
+ * APPLICATION CONTROLLER
  * --------------------------------------------------------------------
  * Author V.Avramenko aka Lordz (avbitinfo@gmail.com)
  * Created on 28.10.2016. Last modified on 27.12.2016

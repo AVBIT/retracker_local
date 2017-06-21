@@ -1,10 +1,9 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                              CRON JOB
+ * CRON JOB
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.10.2016. Last modified on 02.12.2016
+ * Created on 27.10.2016. Last modified on 21.06.2017
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -12,7 +11,7 @@
  * ----------------------------------------------------------------------------
  */
 
-//require_once 'autoload.php';
+
 require_once  '../autoload.php';
 
 $time_start = microtime(true);
@@ -42,5 +41,4 @@ if (defined('LOG_LEVEL') && LOG_LEVEL<=Log::INFO){
 }
 
 unlink($semafor_file);
-
 exit;

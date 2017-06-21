@@ -1,7 +1,6 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                              URI CLASS
+ * URI CLASS
  * ----------------------------------------------------------------------------
  * URI (Universal Resource Identifier) class.
  * Usage: $url = Uri::makeURL('http://example.com');

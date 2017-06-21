@@ -1,7 +1,6 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                              LOG CLASS
+ * LOG CLASS
  * ----------------------------------------------------------------------------
  * Log class using Singleton pattern.
  * Only one instance of the class will be made, this requires less memory.
@@ -135,6 +134,5 @@ class Log {
         $str = sprintf("%s %s %s".PHP_EOL, date(DATE_RFC822), $level_str, $msg );
         @file_put_contents($this->log_filename, $str, FILE_APPEND);
     }
-
 
 }

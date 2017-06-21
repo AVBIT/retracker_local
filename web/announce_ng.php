@@ -1,7 +1,6 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                              ANNOUNCER
+ * ANNOUNCER
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
  * Created on 26.10.2016. Last modified on 05.12.2016

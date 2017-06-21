@@ -15,9 +15,9 @@
 
 // Include config
 if (isset($_SERVER['REMOTE_ADDR']) && ($_SERVER['REMOTE_ADDR']=='::1' || $_SERVER['REMOTE_ADDR']=='127.0.0.1') && file_exists(__DIR__.'/config.local.php') ){
-    require_once 'config.local.php'; // may be local config
+    require_once 'config.dev.php'; // may be local config (for )
 } else {
-    require_once 'config.inc.php';
+    require_once 'config.prod.php';
 }
 
 

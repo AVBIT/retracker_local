@@ -9,24 +9,29 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 
 ##
 #### INSTALL:
-1. Create MySQL database 'retracker' and create tables (sql/schema.sql);
+- Create MySQL database 'retracker' and create tables (sql/schema.sql);
 ```
 # mysql -uroot -p your_password
 # CREATE DATABASE `retracker` CHARACTER SET cp1251 COLLATE cp1251_general_ci;
 # use retracker;
 # \. /path/to/sql/schema.sql
 ```
-2. Copy the files to the web server directory (Use Git or checkout with SVN using the web URL: https://github.com/AVBIT/retracker_local.git). Example for SVN:
+
+- Copy the files to the web server directory (Use Git or checkout with SVN using the web URL: https://github.com/AVBIT/retracker_local.git). Examples:
+```
+# sudo git clone https://github.com/AVBIT/retracker_local.git/trunk /usr/www/retracker_local
+```
+or
 ```
 # sudo svn co https://github.com/AVBIT/retracker_local.git/trunk /usr/www/retracker_local
 ```
-3. Copy 'app/config.sample.php' to 'app/config.inc.php';
-4. Configure the connection to the database (app/config.inc.php); 
-5. Configure a virtual host of web server to the directory "web"; 
-6. Create DNS name "retracker.local" (subscribers will be use URL: http://retracker.local/announce).
-7. Create cron job for run garbage collector. (add line in crontab file, example):
+- Copy 'app/config.sample.php' to 'app/config.prod.php';
+- Configure the connection to the database (app/config.prod.php); 
+- Configure a virtual host of web server to the directory "web"; 
+- Create DNS name "retracker.local" (subscribers will be use URL: http://retracker.local/announce).
+- Create cron job for run garbage collector. (add line in crontab file, example):
 ```
-*/5    *       *       *       *       root    cd /usr/www/retracker_local/app/bin/ && php cron_job.php > /dev/null 2>&1
+*/5    *       *       *       *       root    cd /usr/www/retracker_local/app/bin/ && php cron.php > /dev/null 2>&1
 ```
 8. Install 'python' and 'libtorrent-rasterbar-python' (it should install the packages:  /usr/ports/lang/python, /usr/ports/net-p2p/libtorrent, /usr/ports/net-p2p/libtorrent-rasterbar, /usr/ports/net-p2p/libtorrent-rasterbar-python). It is not necessary, but desirable, because in practice many network announcements do not have the name and size and they will not be displayed on the web site. (Example for FreeBSD):
 ```
@@ -39,12 +44,23 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 
 
 #### UPDATE:
-1. Update all files. Example for SVN:
+- Update all files. Examples:
+```
+# cd /usr/www/retracker_local
+# sudo git pull
+```
+or
 ```
 # cd /usr/www/retracker_local
 # sudo svn up
 ```
-2. When changes affecting the structure of the database, you may need to re-create the database tables. (sql/schema.sql);
+- Update dependencies. Examples:
+```
+# cd /usr/www/retracker_local
+# composer update
+# composer make
+```
+- When changes affecting the structure of the database, you may need to re-create the database tables. (sql/schema.sql);
 ```
 # mysql -uroot -p your_password
 # use retracker;
@@ -54,6 +70,19 @@ Retracker allows a direct connection by protocol bittorrent between subscribers 
 
 ##
 #### Release notes
+- **21.06.2017** - Code refactoring.
+
+It may be important - the names of some files are changed: 
+rename cron_job.php to cron.php; 
+rename config.inc.php to config.prod.php; 
+rename config.local.php to config.dev.php; 
+
+Updated version of TWIG (^1.30 to ^2.4).
+
+The directory 'vendor' is excluded from the code (use the 'composer update' command to create it)
+
+The 'composer make' command (script app/bin/make.php) has been added, use it to copy the "twbs/bootstrap" files from the VENDOR to the public WEB/ASSETS directory and to clear the cache.
+
 - **27.10.2016** - test new sql-schema, announce and scrape actions.
 - **26.10.2016** - bug fix (MySQL [Err] 1366 - Incorrect string value: '\xEF\xBF\xBD\xEF\xBF\xBD...' for column 'info_hash' at row 1).
 - **18.10.2016** - change application structure (renamed some directories and files, usage autoload classes, etc)

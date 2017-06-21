@@ -1,7 +1,6 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                              SCRAPE
+ * SCRAPE
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
  * Created on 26.10.2016. Last modified on 11.11.2016

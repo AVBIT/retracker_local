@@ -1,11 +1,10 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                              History CLASS
+ * History CLASS
  * ----------------------------------------------------------------------------
  * History class using Singleton pattern.
  * Only one instance of the class will be made, this requires less memory.
- * Usage: $history = BitTorrent::getInstance();
+ * Usage: $history = History::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
  * Created on 10.11.2016. Last modified on 05.12.2016

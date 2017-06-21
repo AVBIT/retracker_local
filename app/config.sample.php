@@ -1,10 +1,9 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                              CONFIG
+ * CONFIG
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 02.03.2016. Last modified on 05.12.2016
+ * Created on 02.03.2016. Last modified on 21.06.2017
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -12,6 +11,10 @@
  * ----------------------------------------------------------------------------
  */
 
+ini_set('display_errors', 0); // comment this line for development config (config.dev.php)
+
+// TIMEZONE.
+date_default_timezone_set('Europe/Kiev');
 
 // DATABASE CONNECTION
 define("DB_HOST",    'localhost'); // localhost - the fastest connection via UNIX socket!!!
@@ -28,7 +31,6 @@ define('DIR_VAR', 	SELF."var".DS);
 define('DIR_CACHE', DIR_VAR."cache".DS);
 define('DIR_LOG',   DIR_VAR."log".DS);
 define('DIR_TMP',   DIR_VAR."tmp".DS);
-//define('DIR_SESSION', DIR_VAR."session".DS);
 
 //LOG SETTINGS
 define('LOG_LEVEL', 3);     // if (defined('LOG_LEVEL')) # Enable logging !!! (TRACE=1, DEBUG, INFO, WARNING, ERROR, FATAL=6)

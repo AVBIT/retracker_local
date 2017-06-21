@@ -1,14 +1,13 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                              DATABASE CLASS
+ * DATABASE CLASS
  * ----------------------------------------------------------------------------
  * Database class using MySQLI and Singleton pattern.
  * Only one instance of the class will be made, this requires less memory.
  * Usage: $db = Database::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 06.03.2016. Last modified on 26.10.2016
+ * Created on 06.03.2016. Last modified on 21.06.2017
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -56,5 +55,20 @@ class Database extends mysqli {
 
     // Magic method clone is empty to prevent duplication of connection
     private function __clone() { }
+
+
+    public function getTableRecordsCount($tablename=''){
+        $result = 0;
+        if (empty($tablename)) return $result;
+        $SQL = "SELECT table_name, table_rows
+                FROM INFORMATION_SCHEMA.TABLES
+                WHERE TABLE_SCHEMA = '".DB_NAME."' AND table_name='$tablename';";
+        if ($res = $this->getInstance()->query($SQL) ){
+            $row = $res->fetch_assoc();
+            $result = $row['table_rows'];
+            $res->close();
+        }
+        return $result;
+    }
 
 }

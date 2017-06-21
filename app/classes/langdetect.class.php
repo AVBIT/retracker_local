@@ -1,8 +1,7 @@
 <?php
 /**
- * ----------------------------------------------------------------------------
- *                              LANGUAGE DETECT CLASS
- *              (determining the preferred language of the user)
+ * LANGUAGE DETECT CLASS
+ * (determining the preferred language of the user)
  * ----------------------------------------------------------------------------
  * LangDetect class using Singleton pattern.
  * Only one instance of the class will be made, this requires less memory.
