@@ -3,7 +3,7 @@
  * ANNOUNCER
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 26.10.2016. Last modified on 05.12.2016
+ * Created on 26.10.2016. Last modified on 21.06.2017
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -229,8 +229,8 @@ if (!$output) {
     $output = array(
         'interval' => (int)$ann_interval,
         //'min interval' => (int)$ann_interval,  // tracker config: min interval (sec?)
-        'peers' => $peerset,
-        'peers6' => $peerset6,
+        'peers' => isset($peerset)? $peerset : [],
+        'peers6' => isset($peerset6)? $peerset6 : [],
         'complete' => (int)$seeders,
         'incomplete' => (int)$leechers
     );
