@@ -1,6 +1,6 @@
 <?php
 /**
- * CONFIG
+ * CONFIG SAMPLE
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
  * Created on 02.03.2016. Last modified on 21.06.2017
@@ -33,7 +33,7 @@ define('DIR_LOG',   DIR_VAR."log".DS);
 define('DIR_TMP',   DIR_VAR."tmp".DS);
 
 //LOG SETTINGS
-define('LOG_LEVEL', 3);     // if (defined('LOG_LEVEL')) # Enable logging !!! (TRACE=1, DEBUG, INFO, WARNING, ERROR, FATAL=6)
+define('LOG_LEVEL', 4);     // if (defined('LOG_LEVEL')) # Enable logging !!! (TRACE=1, DEBUG, INFO, WARNING, ERROR, FATAL=6)
 
 // CLASS CACHE
 define('CACHE', DIR_CACHE);         // if (defined('CACHE')) # Enable cache !!!
