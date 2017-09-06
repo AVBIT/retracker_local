@@ -38,8 +38,14 @@ function encode_ip($dotquad_ip) {
 }
 
 function decode_ip ($ip) {
-    //return long2ip("0x{$ip}");
-	return long2ip(hexdec("0x{$ip}")); // PHP 7.1.0 - the parameter type of proper_address has been changed from string to integer ... string long2ip ( int $proper_address )
+	if (version_compare(phpversion(), "7.1.0", ">=")) {
+		// PHP 7.1.0
+		// string long2ip(int $proper_address)
+		// the parameter type of proper_address has been changed from string to integer.
+		return long2ip(hexdec("0x{$ip}"));
+	} else {
+		return long2ip("0x{$ip}");
+	}
 }
 
 function verify_ip ($ip) {
