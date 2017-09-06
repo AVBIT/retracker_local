@@ -7,7 +7,7 @@
  * Usage: $history = History::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 10.11.2016. Last modified on 21.06.2017
+ * Created on 10.11.2016. Last modified on 06.09.2017
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -82,8 +82,7 @@ class History {
                   history.reg_time,
                   COALESCE(announce_resolver.seeders, 0) AS seeders, 
                   COALESCE(announce_resolver.leechers, 0) AS leechers
-                FROM
-                  history
+                FROM ".History::getTableName()." 
                 LEFT JOIN announce_resolver ON history.info_hash_hex = announce_resolver.info_hash_hex
                 WHERE MATCH (history.`name`,history.`comment`, history.info_hash_hex) AGAINST ('$search_query_sql');
               ";
@@ -118,8 +117,7 @@ class History {
                   history.reg_time,
                   COALESCE(announce_resolver.seeders, 0) AS seeders, 
                   COALESCE(announce_resolver.leechers, 0) AS leechers
-                FROM
-                  history
+                FROM ".History::getTableName()." 
                 LEFT JOIN announce_resolver ON history.info_hash_hex = announce_resolver.info_hash_hex
                 WHERE history.`name` LIKE '%$search_query_sql%' OR history.`name` LIKE '$search_query_sql%' OR history.`name` LIKE '%$search_query_sql'
                 ORDER BY update_time DESC
@@ -179,7 +177,7 @@ class History {
 			";
             */
 
-            $SQL = "INSERT DELAYED INTO $this->tablename
+            $SQL = "INSERT DELAYED INTO ".History::getTableName()."
 				  (info_hash_hex, `name`, `size`, `comment`, reg_time, update_time)
 			    VALUES
 				  ('$info_hash_hex', '$name', " . ($size > 0 ? $size : 0) . ", '$comment', UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
@@ -226,8 +224,7 @@ class History {
                   history.reg_time,
                   COALESCE(announce_resolver.seeders, 0) AS seeders, 
                   COALESCE(announce_resolver.leechers, 0) AS leechers
-                FROM
-                  history
+                FROM ".History::getTableName()."  
                 LEFT JOIN announce_resolver ON history.info_hash_hex = announce_resolver.info_hash_hex
                 ORDER BY $orderBy LIMIT $limit OFFSET $offset;
         ";
