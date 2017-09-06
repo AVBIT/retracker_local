@@ -3,7 +3,7 @@
  * CRON JOB
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.10.2016. Last modified on 21.06.2017
+ * Created on 27.10.2016. Last modified on 06.09.2017
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -29,7 +29,7 @@ file_put_contents($semafor_file, date('D M d H:i:s T Y'));
 
 
 // PROCESSING CRON JOB
-file_get_contents("http://retracker.local/announce.php?" . $tr_cfg['run_gc_key'] . "=1"); // Garbage collector
+file_get_contents("http://retracker.local/announce?" . $tr_cfg['run_gc_key'] . "=1"); // Garbage collector
 Resolver::getInstance()->resolveAllAnnounces();     // Resolve unknown name and size announces
 Announce::getInstance()->SaveAllToHistory();        // Save(update) resolved announces
 
