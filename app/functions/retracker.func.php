@@ -3,7 +3,7 @@
  * RETRACKER FUNCTIONS
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 24.10.2016. Last modified on 28.10.2016
+ * Created on 24.10.2016. Last modified on 06.09.2017
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -38,7 +38,8 @@ function encode_ip($dotquad_ip) {
 }
 
 function decode_ip ($ip) {
-    return long2ip("0x{$ip}");
+    //return long2ip("0x{$ip}");
+	return long2ip(hexdec("0x{$ip}")); // PHP 7.1.0 - the parameter type of proper_address has been changed from string to integer ... string long2ip ( int $proper_address )
 }
 
 function verify_ip ($ip) {
