@@ -74,6 +74,7 @@ or
 
 ##
 #### Release notes
+- **06.09.2017** - PHP 7.1.x and Nginx ready. Fix error in history.class.php
 - **21.06.2017** - Code refactoring.
 
 It may be important - the names of some files are changed: 
