@@ -8,7 +8,7 @@
  * Usage: $info = Resolver::getInstance()->getInfoByInfoHashHex($info_hash_hex);
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 23.11.2016. Last modified on 05.12.2016
+ * Created on 23.11.2016. Last modified on 05.09.2018
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -24,7 +24,7 @@ class Resolver
 
     /**
      * Get an instance of the class
-     * @return Instance
+     * @return Resolver
      */
     public static function getInstance()
     {

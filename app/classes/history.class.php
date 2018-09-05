@@ -7,7 +7,7 @@
  * Usage: $history = History::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 10.11.2016. Last modified on 06.09.2017
+ * Created on 10.11.2016. Last modified on 05.09.2018
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -23,7 +23,7 @@ class History {
 
     /**
     * Get an instance of the class
-    * @return Instance
+    * @return History
     */
     public static function getInstance() {
         if(!self::$_instance) {

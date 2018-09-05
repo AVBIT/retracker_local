@@ -7,7 +7,7 @@
  * Usage: Log::getInstance()->addWarning('Message');
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.11.2016. Last modified on 08.12.2016
+ * Created on 27.11.2016. Last modified on 05.09.2018
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -40,7 +40,7 @@ class Log {
 
     /**
      * Get an instance of the class
-    * @return Instance
+    * @return Log
     */
     public static function getInstance() {
         if(!self::$_instance) {

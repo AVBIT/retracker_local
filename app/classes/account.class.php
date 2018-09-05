@@ -7,7 +7,7 @@
  * Usage: $account = Account::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 28.10.2016. Last modified on 21.06.2017
+ * Created on 28.10.2016. Last modified on 05.09.2018
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -22,7 +22,7 @@ class Account {
 
     /**
     * Get an instance of the class
-    * @return Instance
+    * @return Account
     */
     public static function getInstance() {
         if(!self::$_instance) {

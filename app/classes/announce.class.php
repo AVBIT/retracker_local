@@ -7,7 +7,7 @@
  * Usage: $announce = Announce::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 27.03.2016. Last modified on 21.06.2017
+ * Created on 27.03.2016. Last modified on 05.09.2018
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -25,7 +25,7 @@ class Announce {
 
     /**
     * Get an instance of the class
-    * @return Instance
+    * @return Announce
     */
     public static function getInstance() {
         if(!self::$_instance) {

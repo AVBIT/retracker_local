@@ -9,7 +9,7 @@
  * Usage: $language = LangDetect::getInstance()->getBestMatch('en', $langs);
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 09.11.2016. Last modified on 09.11.2016
+ * Created on 09.11.2016. Last modified on 05.09.2018
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -24,7 +24,7 @@ class LangDetect
 
     /**
      * Get an instance of the class
-     * @return Instance
+     * @return LangDetect
      */
     public static function getInstance() {
         if(!self::$_instance) {
