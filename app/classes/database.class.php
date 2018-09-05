@@ -7,7 +7,7 @@
  * Usage: $db = Database::getInstance();
  * ----------------------------------------------------------------------------
  * Created by Viacheslav Avramenko aka Lordz (avbitinfo@gmail.com)
- * Created on 06.03.2016. Last modified on 21.06.2017
+ * Created on 06.03.2016. Last modified on 05.09.2018
  * ----------------------------------------------------------------------------
  * "THE BEER-WARE LICENSE":
  * As long as you retain this notice you can do whatever you want with this stuff.
@@ -22,7 +22,7 @@ class Database extends mysqli {
 
     /**
     * Get an instance of the Database
-    * @return Instance
+    * @return Database
     */
     public static function getInstance() {
         if(!self::$_instance) {
@@ -46,6 +46,12 @@ class Database extends mysqli {
 
         if (!parent::options(MYSQLI_OPT_CONNECT_TIMEOUT, 5)) {
             die('Set MYSQLI_OPT_CONNECT_TIMEOUT ended in failure!');
+        }
+
+        // Convert integer and float columns back to PHP numbers. Only valid for mysqlnd.
+        // In most cases, this requires less memory!!!
+        if (!parent::options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, true)) {
+            die('Set MYSQLI_OPT_INT_AND_FLOAT_NATIVE ended in failure!');
         }
 
         if (!parent::real_connect($host, $user, $password, $database, $port, $socket, $flags)) {
