@@ -74,6 +74,11 @@ or
 
 ##
 #### Release notes
+- **05.09.2018** - Changed engine from MyISAM to InnoDB for the tables `announce_unresolved` and `history`. This allows you to run mysqldump using the --single-transaction option, because then it dumps the consistent state of the database at the time when START TRANSACTION was issued without blocking any applications. To modify existing tables without losing data, you must execute SQL queries 
+```
+# ALTER TABLE announce_unresolved ENGINE=InnoDB;
+# ALTER TABLE history ENGINE=InnoDB;
+```
 - **06.09.2017** - PHP 7.1.x and Nginx ready. Fix error in history.class.php
 - **21.06.2017** - Code refactoring.
 
